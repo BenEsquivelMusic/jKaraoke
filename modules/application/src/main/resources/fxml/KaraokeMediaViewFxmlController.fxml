@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.media.MediaView?>
+
+
+<AnchorPane fx:id="mediaViewPane" stylesheets="@style.css" fx:controller="com.bem.KaraokeMediaViewFxmlController" xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1">
+   <MediaView fx:id="mediaView" fitHeight="${mediaViewPane.height}" fitWidth="${mediaViewPane.width}"/>
+</AnchorPane>
