@@ -108,7 +108,7 @@
                         <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="880.0" prefWidth="255.0">
                               <children>
-                                 <TableView fx:id="tableViewSingerQueue" prefHeight="543.0" prefWidth="255.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <TableView fx:id="tableViewSingerQueue" prefHeight="518.0" prefWidth="255.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                    <columns>
                                      <TableColumn fx:id="columnSinger" editable="false" prefWidth="75.0" sortable="false" text="Singer" />
                                      <TableColumn fx:id="columnSong" editable="false" prefWidth="75.0" sortable="false" text="Song" />
@@ -138,7 +138,7 @@
                                 </TitledPane>
                             </AnchorPane>
                             <AnchorPane prefHeight="52.0" prefWidth="362.0" VBox.vgrow="NEVER">
-                                <Slider fx:id="sliderTrack" disable="true" layoutX="30.0" layoutY="19.0" prefHeight="14.0" prefWidth="620.0" showTickMarks="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="19.0">
+                                <Slider fx:id="sliderTrack" blockIncrement="1.0" disable="true" layoutX="30.0" layoutY="19.0" prefHeight="14.0" prefWidth="620.0" showTickMarks="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="19.0">
                                     <padding>
                                         <Insets left="40.0" right="40.0" />
                                     </padding>
@@ -193,7 +193,7 @@
                                  </AnchorPane>
                                  <AnchorPane prefHeight="200.0" prefWidth="89.0">
                                     <children>
-                                       <Slider fx:id="sliderVolume" onDragDetected="#handleVolumeAction" prefHeight="12.0" prefWidth="140.0" value="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="18.5" />
+                                       <Slider fx:id="sliderVolume" blockIncrement="1.0" prefHeight="12.0" prefWidth="140.0" value="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="18.5" />
                                     </children>
                                  </AnchorPane>
                               </children>
@@ -243,7 +243,6 @@
                 </textFill>
             </Label>
             <Pane HBox.hgrow="ALWAYS" />
-            <Label fx:id="labelQueueTime" font="$x3" text="Queue Time: 00:00:00" textFill="$x4" HBox.hgrow="NEVER" />
         </HBox>
     </VBox>
 </AnchorPane>

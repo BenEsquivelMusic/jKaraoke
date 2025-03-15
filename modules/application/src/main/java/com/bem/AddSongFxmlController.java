@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.MediaException;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -19,31 +20,30 @@ public final class AddSongFxmlController implements Initializable {
 
     @FXML
     private TextField txtSong;
+
     @FXML
     private TextField txtSingerName;
+
     @FXML
     private AnchorPane addSongAnchorPane;
-    private boolean formCompleted;
+
+    private IndexedSinger singer;
 
     public AddSongFxmlController() {
-        this.formCompleted = false;
+        /* FXML controller class */
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        //TODO
     }
 
-    public String getSong() {
-        return txtSong.getText();
-    }
-
-    public String getSingerName() {
-        return txtSingerName.getText();
+    public IndexedSinger getSinger() {
+        return singer;
     }
 
     public boolean isFormCompleted() {
-        return formCompleted;
+        return Objects.nonNull(singer);
     }
 
     public void handleBrowseSong(ActionEvent actionEvent) {
@@ -74,8 +74,9 @@ public final class AddSongFxmlController implements Initializable {
             handleAlert("Singer name cannot be blank");
         } else if (txtSong.getText().isBlank()) {
             handleAlert("Song name cannot be blank");
+        } else if (!setIndexedSinger()) {
+            handleAlert("Invalid Media format: " + txtSong.getText());
         } else {
-            this.formCompleted = true;
             getStage().close();
         }
         actionEvent.consume();
@@ -84,6 +85,15 @@ public final class AddSongFxmlController implements Initializable {
     private void handleAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
         alert.showAndWait();
+    }
+
+    private boolean setIndexedSinger() {
+        try {
+            this.singer = new IndexedSinger(0, txtSingerName.getText(), txtSong.getText());
+        } catch (IllegalArgumentException | UnsupportedOperationException | MediaException e) {
+            return false;
+        }
+        return true;
     }
 
 }

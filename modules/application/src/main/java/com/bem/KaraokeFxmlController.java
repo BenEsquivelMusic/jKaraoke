@@ -10,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -35,38 +34,46 @@ public final class KaraokeFxmlController implements Initializable {
     /* Buttons */
     @FXML
     private Button buttonPlay;
+
     @FXML
     private Button buttonStop;
+
     @FXML
     private Button buttonPause;
+
     @FXML
     private Button buttonNextSinger;
+
     @FXML
     private Button buttonCompleteSinger;
+
     @FXML
     private Button buttonReQueueSinger;
+
     @FXML
     private Button buttonChangeSong;
 
     /* Labels */
     @FXML
     private Label labelSingerName;
+
     @FXML
     private Label labelQueue;
-    @FXML
-    private Label labelQueueTime;
 
     /* Sliders */
     @FXML
     private Slider sliderVolume;
+
     @FXML
     private Slider sliderTrack;
 
     /* Tables and Columns */
     @FXML
     private TableView<IndexedSinger> tableViewSingerQueue;
+
     @FXML
     private TableColumn<IndexedSinger, String> columnSinger;
+
     @FXML
     private TableColumn<IndexedSinger, String> columnSong;
 
@@ -90,6 +97,7 @@ public final class KaraokeFxmlController implements Initializable {
         styleSlider(sliderVolume);
         styleSlider(sliderTrack);
         sliderVolume.setValue(0.0);
+        sliderVolume.setValue(50.0);
         sliderTrack.setValue(0.0);
         tableViewSingerQueue.setItems(indexedSingers);
         this.singerLineupFxmlController = loadController("/fxml/SingerLineupFxmlController.fxml", "Karaoke Singer Lineup", controller -> controller.setSingers(indexedSingers), false);
@@ -115,7 +123,7 @@ public final class KaraokeFxmlController implements Initializable {
     public void handleAddSinger(ActionEvent actionEvent) {
         AddSongFxmlController addSongFxmlController = loadController("/fxml/AddSongFxmlController.fxml", "Choose Singer and Song", null, true);
         if (addSongFxmlController.isFormCompleted()) {
-            IndexedSinger singer = new IndexedSinger(indexedSingers.size(), addSongFxmlController.getSingerName(), addSongFxmlController.getSong());
+            IndexedSinger singer = addSongFxmlController.getSinger();
             indexedSingers.add(singer);
             updateSingerIndex();
             if (buttonNextSinger.isDisable() && !indexedSingers.isEmpty() && Objects.isNull(activeSinger)) {
@@ -173,13 +181,6 @@ public final class KaraokeFxmlController implements Initializable {
         actionEvent.consume();
     }
 
-    public void handleVolumeAction(MouseEvent mouseEvent) {
-        if (Objects.nonNull(mediaPlayer)) {
-            mediaPlayer.setVolume(sliderVolume.getValue());
-        }
-        mouseEvent.consume();
-    }
-
     public void handleChangeSong(ActionEvent actionEvent) {
         //TODO
         actionEvent.consume();
@@ -211,6 +212,15 @@ public final class KaraokeFxmlController implements Initializable {
                 sliderTrack.setValue(Math.min((currentTime * 100.0) / totalTime, 100.0));
             }
         });
+        sliderTrack.valueProperty().addListener(observable -> {
+            if (sliderTrack.isValueChanging()) {
+                Duration totalTime = mediaPlayer.getTotalDuration();
+                Duration seekTime = totalTime.multiply(getSeekValue());
+                mediaPlayer.seek(seekTime);
+            }
+        });
+        sliderVolume.valueProperty().addListener(ignored -> mediaPlayer.setVolume(getVolume()));
+        mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.stop());
         karaokeMediaViewFxmlController.updateMediaPlayerForMediaView(mediaPlayer);
         updateSingerIndex();
         labelSingerName.setText(activeSinger.getSingerName());
@@ -265,15 +275,11 @@ public final class KaraokeFxmlController implements Initializable {
                 .parallel()
                 .forEach(singerIndex -> {
                     IndexedSinger singer = indexedSingers.get(singerIndex);
-                    if (singer.getIndex() != singerIndex) {
-                        singer.setIndex(singerIndex);
+                    int singerPriority = singerIndex + 1;
+                    if (singer.getIndex() != singerPriority) {
+                        singer.setIndex(singerPriority);
                     }
                 });
-        Duration durationAccumulator = Duration.ONE;
-        for (IndexedSinger singer : indexedSingers) {
-            durationAccumulator.add(singer.getMedia().getDuration());
-        }
-        labelQueueTime.setText("Queue Time: " + (int) durationAccumulator.toHours() + ':' + (int) durationAccumulator.toMinutes() + ':' + (int) durationAccumulator.toSeconds());
         labelQueue.setText("Queue: " + indexedSingers.size());
     }
 
@@ -318,6 +324,26 @@ public final class KaraokeFxmlController implements Initializable {
 
     private boolean mediaPlayerIsPlaying() {
         return MediaPlayer.Status.PLAYING.equals(mediaPlayer.getStatus());
+    }
+
+    private double getSeekValue() {
+        return getSliderValueInDecimalForm(sliderTrack);
+    }
+
+    private double getVolume() {
+        return getSliderValueInDecimalForm(sliderVolume);
+    }
+
+    private double getSliderValueInDecimalForm(Slider slider) {
+        double max = slider.getMax();
+        double value = slider.getValue();
+        if (value >= max) {
+            return 1.0;
+        }
+        if (value > 0.0) {
+            return value / max;
+        }
+        return 0.0;
     }
 
 }
