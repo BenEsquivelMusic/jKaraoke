@@ -17,6 +17,10 @@ public final class Main extends Application {
         /* Main application class  */
     }
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/KaraokeFxmlController.fxml"));
@@ -34,10 +38,6 @@ public final class Main extends Application {
         if (Objects.nonNull(closeConsumer)) {
             closeConsumer.accept(null);
         }
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 
 }

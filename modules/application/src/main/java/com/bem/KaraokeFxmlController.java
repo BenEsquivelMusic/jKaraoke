@@ -1,5 +1,6 @@
 package com.bem;
 
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,6 +31,7 @@ public final class KaraokeFxmlController implements Initializable {
 
     private IndexedSinger activeSinger;
     private MediaPlayer mediaPlayer;
+    private InvalidationListener seekTrackListener;
 
     /* Buttons */
     @FXML
@@ -88,6 +90,7 @@ public final class KaraokeFxmlController implements Initializable {
             }
             mediaPlayer.dispose();
         }
+        karaokeMediaViewFxmlController.closeMediaView();
     }
 
     @Override
@@ -101,7 +104,7 @@ public final class KaraokeFxmlController implements Initializable {
         sliderTrack.setValue(0.0);
         tableViewSingerQueue.setItems(indexedSingers);
         this.singerLineupFxmlController = loadController("/fxml/SingerLineupFxmlController.fxml", "Karaoke Singer Lineup", controller -> controller.setSingers(indexedSingers), false);
-        this.karaokeMediaViewFxmlController = loadController("/fxml/KaraokeMediaViewFxmlController.fxml", "Karaoke Media View",null, false);
+        this.karaokeMediaViewFxmlController = loadController("/fxml/KaraokeMediaViewFxmlController.fxml", "Karaoke Media View", null, false);
     }
 
     public void handleMoveSingerForward(ActionEvent actionEvent) {
@@ -202,6 +205,7 @@ public final class KaraokeFxmlController implements Initializable {
         buttonNextSinger.setDisable(true);
         this.activeSinger = indexedSingers.removeFirst();
         this.mediaPlayer = new MediaPlayer(activeSinger.getMedia());
+        karaokeMediaViewFxmlController.updateMediaPlayerForMediaView(mediaPlayer);
         sliderTrack.setDisable(false);
         mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
             double currentTime = newValue.toMillis();
@@ -212,16 +216,21 @@ public final class KaraokeFxmlController implements Initializable {
                 sliderTrack.setValue(Math.min((currentTime * 100.0) / totalTime, 100.0));
             }
         });
-        sliderTrack.valueProperty().addListener(observable -> {
+        if (Objects.nonNull(seekTrackListener)) {
+            sliderTrack.valueProperty().removeListener(seekTrackListener);
+        }
+        this.seekTrackListener = observable -> {
             if (sliderTrack.isValueChanging()) {
+                double seekValue = getSeekValue();
                 Duration totalTime = mediaPlayer.getTotalDuration();
-                Duration seekTime = totalTime.multiply(getSeekValue());
+                Duration seekTime = totalTime.multiply(seekValue);
                 mediaPlayer.seek(seekTime);
+                karaokeMediaViewFxmlController.seek(seekValue);
             }
-        });
+        };
+        sliderTrack.valueProperty().addListener(seekTrackListener);
         sliderVolume.valueProperty().addListener(ignored -> mediaPlayer.setVolume(getVolume()));
         mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.stop());
-        karaokeMediaViewFxmlController.updateMediaPlayerForMediaView(mediaPlayer);
         updateSingerIndex();
         labelSingerName.setText(activeSinger.getSingerName());
         labelSingerName.setVisible(true);
@@ -246,7 +255,6 @@ public final class KaraokeFxmlController implements Initializable {
 
     private void resetMediaView() {
         closeMediaPlayer();
-        karaokeMediaViewFxmlController.updateMediaPlayerForMediaView(null);
         this.activeSinger = null;
         this.mediaPlayer = null;
         labelSingerName.setText("");
