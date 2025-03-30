@@ -1,6 +1,6 @@
 package com.bem.image;
 
-public interface ImageReader {
+public sealed interface ImageReader permits CdgImageReader {
 
     void initialize();
 

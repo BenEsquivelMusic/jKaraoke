@@ -9,29 +9,42 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 public final class KaraokeFxmlController implements Initializable {
 
+    private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
+    private static final String PHASE_LABEL_PREFIX = "Band ";
+
     private final ObservableList<IndexedSinger> indexedSingers;
+    private final NumberFormat numberFormat;
+
     private SingerLineupFxmlController singerLineupFxmlController;
     private KaraokeMediaViewFxmlController karaokeMediaViewFxmlController;
 
     private IndexedSinger activeSinger;
     private MediaPlayer mediaPlayer;
     private InvalidationListener seekTrackListener;
+    private InvalidationListener volumeControlListener;
 
     /* Buttons */
     @FXML
@@ -55,12 +68,24 @@ public final class KaraokeFxmlController implements Initializable {
     @FXML
     private Button buttonChangeSong;
 
+    @FXML
+    private Button buttonAddNotes;
+
     /* Labels */
     @FXML
     private Label labelSingerName;
 
     @FXML
     private Label labelQueue;
+
+    @FXML
+    private Label labelStatus;
+
+    @FXML
+    private Label labelTime;
+
+    @FXML
+    private Label labelSong;
 
     /* Sliders */
     @FXML
@@ -79,8 +104,21 @@ public final class KaraokeFxmlController implements Initializable {
     @FXML
     private TableColumn<IndexedSinger, String> columnSong;
 
+    @FXML
+    private BarChart<String, Double> barChartAudioSpectrum;
+
+    @FXML
+    private CategoryAxis categoryAxisPhase;
+
+    @FXML
+    private NumberAxis numberAxisBarMagnitude;
+
+
     public KaraokeFxmlController() {
         this.indexedSingers = FXCollections.observableArrayList();
+        this.numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(0);
+        numberFormat.setMinimumIntegerDigits(2);
     }
 
     public void closeMediaPlayer() {
@@ -103,8 +141,26 @@ public final class KaraokeFxmlController implements Initializable {
         sliderVolume.setValue(50.0);
         sliderTrack.setValue(0.0);
         tableViewSingerQueue.setItems(indexedSingers);
-        this.singerLineupFxmlController = loadController("/fxml/SingerLineupFxmlController.fxml", "Karaoke Singer Lineup", controller -> controller.setSingers(indexedSingers), false);
-        this.karaokeMediaViewFxmlController = loadController("/fxml/KaraokeMediaViewFxmlController.fxml", "Karaoke Media View", null, false);
+        this.singerLineupFxmlController = loadController("/SingerLineupFxmlController.fxml", "Karaoke Singer Lineup", controller -> controller.setSingers(indexedSingers), false);
+        this.karaokeMediaViewFxmlController = loadController("/KaraokeMediaViewFxmlController.fxml", "Karaoke Media View", null, false);
+        ObservableList<String> phaseCategories = FXCollections.observableArrayList();
+        IntStream.rangeClosed(1, 10).forEach(phase -> phaseCategories.add(PHASE_LABEL_PREFIX + Integer.valueOf(phase).toString()));
+        categoryAxisPhase.setCategories(phaseCategories);
+        numberAxisBarMagnitude.setTickLabelFormatter(new StringConverter<>() {
+            @Override
+            public String toString(Number number) {
+                return number.intValue() - 60 + " db";
+            }
+
+            @Override
+            public Number fromString(String numberText) {
+                String[] splitNumberText = SPACE_PATTERN.split(numberText, -1);
+                if (splitNumberText.length != 2) {
+                    return null;
+                }
+                return Double.valueOf(Integer.parseInt(splitNumberText[0]) + 60.0);
+            }
+        });
     }
 
     public void handleMoveSingerForward(ActionEvent actionEvent) {
@@ -124,7 +180,7 @@ public final class KaraokeFxmlController implements Initializable {
     }
 
     public void handleAddSinger(ActionEvent actionEvent) {
-        AddSongFxmlController addSongFxmlController = loadController("/fxml/AddSongFxmlController.fxml", "Choose Singer and Song", null, true);
+        AddSongFxmlController addSongFxmlController = loadController("/AddSongFxmlController.fxml", "Choose Singer and Song", null, true);
         if (addSongFxmlController.isFormCompleted()) {
             IndexedSinger singer = addSongFxmlController.getSinger();
             indexedSingers.add(singer);
@@ -174,6 +230,7 @@ public final class KaraokeFxmlController implements Initializable {
         if (mediaPlayerIsPlaying()) {
             mediaPlayer.stop();
         }
+        barChartAudioSpectrum.getData().clear();
         actionEvent.consume();
     }
 
@@ -185,6 +242,11 @@ public final class KaraokeFxmlController implements Initializable {
     }
 
     public void handleChangeSong(ActionEvent actionEvent) {
+        //TODO
+        actionEvent.consume();
+    }
+
+    public void handleAddNotes(ActionEvent actionEvent) {
         //TODO
         actionEvent.consume();
     }
@@ -205,6 +267,15 @@ public final class KaraokeFxmlController implements Initializable {
         buttonNextSinger.setDisable(true);
         this.activeSinger = indexedSingers.removeFirst();
         this.mediaPlayer = new MediaPlayer(activeSinger.getMedia());
+        mediaPlayer.totalDurationProperty().addListener((observable, oldValue, newValue) -> {
+            double totalSecs = newValue.toSeconds();
+            double hours = totalSecs / 3600;
+            double minutes = (totalSecs % 3600) / 60;
+            double seconds = totalSecs % 60;
+            labelTime.setText(numberFormat.format(hours) + ':' + numberFormat.format(minutes) + ':' + numberFormat.format(seconds));
+        });
+        labelSong.setText(activeSinger.getSongFile());
+        mediaPlayer.setAudioSpectrumNumBands(10);
         karaokeMediaViewFxmlController.updateMediaPlayerForMediaView(mediaPlayer);
         sliderTrack.setDisable(false);
         mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
@@ -216,6 +287,19 @@ public final class KaraokeFxmlController implements Initializable {
                 sliderTrack.setValue(Math.min((currentTime * 100.0) / totalTime, 100.0));
             }
         });
+        mediaPlayer.setAudioSpectrumListener((timestamp, duration, magnitudes, phases) -> {
+            ObservableList<XYChart.Data<String, Double>> chartData = FXCollections.observableArrayList();
+            double volume = getVolume();
+            for (int phase = 0; phase < phases.length; phase++) {
+                float magnitude = magnitudes[phase];
+                chartData.add(new XYChart.Data<>(
+                        PHASE_LABEL_PREFIX + Integer.valueOf(phase + 1).toString(),
+                        Double.valueOf(Math.max(0.0, magnitude + 60.0) * volume)));
+            }
+            barChartAudioSpectrum.setData(FXCollections.observableArrayList(new XYChart.Series<>("Audio Spectrum", chartData)));
+        });
+
+        //Synchronize track slider
         if (Objects.nonNull(seekTrackListener)) {
             sliderTrack.valueProperty().removeListener(seekTrackListener);
         }
@@ -229,8 +313,16 @@ public final class KaraokeFxmlController implements Initializable {
             }
         };
         sliderTrack.valueProperty().addListener(seekTrackListener);
-        sliderVolume.valueProperty().addListener(ignored -> mediaPlayer.setVolume(getVolume()));
+
+        //Synchronize volume slider
+        if (Objects.nonNull(volumeControlListener)) {
+            sliderVolume.valueProperty().removeListener(volumeControlListener);
+        }
+        this.volumeControlListener = ignored -> mediaPlayer.setVolume(getVolume());
+        sliderVolume.valueProperty().addListener(volumeControlListener);
+
         mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.stop());
+        mediaPlayer.statusProperty().addListener((observable, oldValue, newValue) -> labelStatus.setText(newValue.toString()));
         updateSingerIndex();
         labelSingerName.setText(activeSinger.getSingerName());
         labelSingerName.setVisible(true);
@@ -240,6 +332,7 @@ public final class KaraokeFxmlController implements Initializable {
         buttonCompleteSinger.setDisable(false);
         buttonReQueueSinger.setDisable(false);
         buttonChangeSong.setDisable(false);
+        buttonAddNotes.setDisable(false);
         actionEvent.consume();
     }
 
@@ -267,7 +360,11 @@ public final class KaraokeFxmlController implements Initializable {
         buttonCompleteSinger.setDisable(true);
         buttonReQueueSinger.setDisable(true);
         buttonChangeSong.setDisable(true);
+        buttonAddNotes.setDisable(true);
         buttonNextSinger.setDisable(indexedSingers.isEmpty());
+        labelTime.setText("");
+        labelSong.setText("");
+        labelStatus.setText("");
     }
 
     private TreeSet<Integer> getSelectedRows() {
@@ -353,5 +450,6 @@ public final class KaraokeFxmlController implements Initializable {
         }
         return 0.0;
     }
+
 
 }

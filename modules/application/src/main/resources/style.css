@@ -20,6 +20,10 @@
     -fx-background-color: transparent;
 }
 
+.bar-chart .chart-content .chart-plot-background {
+    -fx-background-color: #1A1A1A;
+    -fx-bar-fill: blue;
+}
 
 /* Label */
 .label {

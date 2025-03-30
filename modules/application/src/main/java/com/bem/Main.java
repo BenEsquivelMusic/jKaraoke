@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -23,7 +24,9 @@ public final class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/KaraokeFxmlController.fxml"));
+        URL fxmlURL = getClass().getResource("/KaraokeFxmlController.fxml");
+        Objects.requireNonNull(fxmlURL);
+        FXMLLoader loader = new FXMLLoader(fxmlURL);
         Parent root = loader.load();
         KaraokeFxmlController controller = loader.getController();
         this.closeConsumer = unused -> controller.closeMediaPlayer();

@@ -10,5 +10,6 @@
       xmlns="http://javafx.com/javafx/23.0.1">
     <Canvas fx:id="mediaViewCanvas"/>
     <CdgMediaView fx:id="cdgMediaView" fitHeight="${mediaViewPane.height}" fitWidth="${mediaViewPane.width}"/>
-    <MediaView fx:id="mediaView" fitHeight="${mediaViewPane.height}" fitWidth="${mediaViewPane.width}"/>
+    <MediaView fx:id="mediaView" fitHeight="${mediaViewPane.height}" fitWidth="${mediaViewPane.width}"
+               preserveRatio="false"/>
 </Pane>

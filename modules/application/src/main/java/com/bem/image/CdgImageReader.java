@@ -1,7 +1,6 @@
 package com.bem.image;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Timer;
@@ -22,7 +21,7 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
     private static final byte CDG_TILE_BLOCK = 6;
     private static final byte CDG_SCROLL_PRESET = 20;
     private static final byte CDG_SCROLL_COPY = 24;
-    private static final byte CDG_TRANPARENT_COLOR = 28;
+    private static final byte CDG_TRANSPARENT_COLOR = 28;
     private static final byte CDG_LOAD_COLOR_TABLE_LOW = 30;
     private static final byte CDG_LOAD_COLOR_TABLE_HIGH = 31;
     private static final byte CDG_TILE_BLOCK_XOR = 38;
@@ -33,11 +32,8 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
     private final Timer timer;
     private final ReentrantLock lock;
 
-    private final byte[] packet = new byte[24];
+    private final byte[] packet;
 
-    private final int[] frequency = new int[39];
-
-    private int bytesRead;
     private boolean isPaused = true;
 
     public CdgImageReader(ImageViewer viewer, File cdgFile) {
@@ -45,12 +41,13 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
         this.viewer = viewer;
         try {
             this.dis = new RandomAccessFile(cdgFile, "r");
-            this.fileLength = cdgFile.length();
-        } catch (FileNotFoundException e) {
+            this.fileLength = dis.length();
+        } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
         this.timer = new Timer(true);
         this.lock = new ReentrantLock();
+        this.packet = new byte[24];
     }
 
     @Override
@@ -71,7 +68,7 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
     @Override
     public void stop() {
         timer.cancel();
-        try (Lock ignored = new Lock()) {
+        try (Lock ignored = new Lock(lock)) {
             dis.close();
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -80,10 +77,9 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
 
     @Override
     public void seek(double percent) {
-        try (Lock ignored = new Lock()) {
+        try (Lock ignored = new Lock(lock)) {
             long seekPosition = getSeekPosition(percent);
             if (seekPosition > 0.0) {
-                System.out.println("Seek position: " + seekPosition);
                 dis.seek(seekPosition);
             } else {
                 dis.seek(0);
@@ -93,11 +89,6 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
         }
     }
 
-    private long getSeekPosition(double percent) {
-        double position = percent * fileLength;
-        position = position - (position % 4.0);
-        return (long)(position - 1.0);
-    }
 
     @Override
     public void reset() {
@@ -110,11 +101,10 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
             return;
         }
         int processedPackets = 0;
+        int bytesRead = 0;
         while ((processedPackets < PacketsPerFrame) && ((bytesRead = readPacket()) == 24)) {
             processedPackets++;
             if ((packet[0] & SC_MASK) == CDG_CMD) {   // CD+G?
-                frequency[packet[1] & SC_MASK]++;
-
                 switch (packet[1] & SC_MASK) {
                     case CDG_MEMORY_PRESET:
                         int color = packet[4] & 0x0F;
@@ -124,8 +114,8 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
                         }
                         break;
                     case CDG_BORDER_PRESET:
-                        int bgcol = packet[4] & 0x0F;
-                        viewer.clearBorder(bgcol);
+                        int backgroundColor = packet[4] & 0x0F;
+                        viewer.clearBorder(backgroundColor);
                         break;
                     case CDG_LOAD_COLOR_TABLE_LOW:
                         for (int i = 0; i < 8; i++) {
@@ -158,9 +148,15 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
         }
     }
 
+    private long getSeekPosition(double percent) {
+        double position = percent * fileLength;
+        position -= (position % 24.0);
+        return (long) position;
+    }
+
     private void setPaused(boolean pause) {
         if (isPaused != pause) {
-            try (Lock ignored = new Lock()) {
+            try (Lock ignored = new Lock(lock)) {
                 this.isPaused = pause;
             } catch (Exception e) {
                 throw new IllegalStateException(e);
@@ -207,15 +203,4 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
         }
     }
 
-    private final class Lock implements AutoCloseable {
-
-        public Lock() throws InterruptedException {
-            lock.lockInterruptibly();
-        }
-
-        @Override
-        public void close() {
-            lock.unlock();
-        }
-    }
 }
