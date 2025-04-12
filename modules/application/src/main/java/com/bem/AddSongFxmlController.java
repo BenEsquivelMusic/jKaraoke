@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -17,6 +18,9 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public final class AddSongFxmlController implements Initializable {
+
+    @FXML
+    private Button buttonBrowseFile;
 
     @FXML
     private TextField txtSong;
@@ -56,6 +60,17 @@ public final class AddSongFxmlController implements Initializable {
         actionEvent.consume();
     }
 
+    public void setUnEditableSingerName(String singerName) {
+        txtSingerName.setText(singerName);
+        txtSingerName.setDisable(true);
+    }
+
+    public void setUnEditableSong(String song) {
+        txtSong.setText(song);
+        txtSong.setDisable(true);
+        buttonBrowseFile.setDisable(true);
+    }
+
     private String getAbsolutePath(File selectedFile) {
         return selectedFile.toURI().toString();
     }
@@ -63,10 +78,6 @@ public final class AddSongFxmlController implements Initializable {
     public void handleCancelAction(ActionEvent actionEvent) {
         getStage().close();
         actionEvent.consume();
-    }
-
-    private Stage getStage() {
-        return (Stage) addSongAnchorPane.getScene().getWindow();
     }
 
     public void handleOkAction(ActionEvent actionEvent) {
@@ -80,6 +91,10 @@ public final class AddSongFxmlController implements Initializable {
             getStage().close();
         }
         actionEvent.consume();
+    }
+
+    private Stage getStage() {
+        return (Stage) addSongAnchorPane.getScene().getWindow();
     }
 
     private void handleAlert(String message) {

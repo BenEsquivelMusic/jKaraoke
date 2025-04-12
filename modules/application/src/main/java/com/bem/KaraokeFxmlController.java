@@ -2,6 +2,7 @@ package com.bem;
 
 import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,6 +35,10 @@ public final class KaraokeFxmlController implements Initializable {
 
     private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
     private static final String PHASE_LABEL_PREFIX = "Band ";
+    private static final String ARTIST = "artist";
+    private static final String ALBUM_ARTIST = "album artist";
+    private static final String TITLE = "title";
+    private static final String UNKNOWN = "UNKNOWN";
 
     private final ObservableList<IndexedSinger> indexedSingers;
     private final NumberFormat numberFormat;
@@ -69,7 +74,7 @@ public final class KaraokeFxmlController implements Initializable {
     private Button buttonChangeSong;
 
     @FXML
-    private Button buttonAddNotes;
+    private Button buttonChangeSinger;
 
     /* Labels */
     @FXML
@@ -86,6 +91,12 @@ public final class KaraokeFxmlController implements Initializable {
 
     @FXML
     private Label labelSong;
+
+    @FXML
+    private Label labelTitle;
+
+    @FXML
+    private Label labelArtist;
 
     /* Sliders */
     @FXML
@@ -144,7 +155,7 @@ public final class KaraokeFxmlController implements Initializable {
         this.singerLineupFxmlController = loadController("/SingerLineupFxmlController.fxml", "Karaoke Singer Lineup", controller -> controller.setSingers(indexedSingers), false);
         this.karaokeMediaViewFxmlController = loadController("/KaraokeMediaViewFxmlController.fxml", "Karaoke Media View", null, false);
         ObservableList<String> phaseCategories = FXCollections.observableArrayList();
-        IntStream.rangeClosed(1, 10).forEach(phase -> phaseCategories.add(PHASE_LABEL_PREFIX + Integer.valueOf(phase).toString()));
+        IntStream.rangeClosed(1, 10).forEach(phase -> phaseCategories.add(PHASE_LABEL_PREFIX + phase));
         categoryAxisPhase.setCategories(phaseCategories);
         numberAxisBarMagnitude.setTickLabelFormatter(new StringConverter<>() {
             @Override
@@ -242,12 +253,31 @@ public final class KaraokeFxmlController implements Initializable {
     }
 
     public void handleChangeSong(ActionEvent actionEvent) {
-        //TODO
+        String singerName = activeSinger.getSingerName();
+        AddSongFxmlController addSongFxmlController = loadController(
+                "/AddSongFxmlController.fxml",
+                "Choose Song",
+                controller -> controller.setUnEditableSingerName(singerName),
+                true);
+        if (addSongFxmlController.isFormCompleted()) {
+            closeMediaPlayer();
+            this.activeSinger = addSongFxmlController.getSinger();
+            setMediaPlayer(false);
+        }
         actionEvent.consume();
     }
 
-    public void handleAddNotes(ActionEvent actionEvent) {
-        //TODO
+    public void handleChangeSinger(ActionEvent actionEvent) {
+        String songFile = activeSinger.getSongFile();
+        AddSongFxmlController addSingerFxmlController = loadController(
+                "/AddSongFxmlController.fxml",
+                "Choose Singer",
+                controller -> controller.setUnEditableSong(songFile),
+                true);
+        if (addSingerFxmlController.isFormCompleted()) {
+            this.activeSinger = addSingerFxmlController.getSinger();
+            labelSingerName.setText(activeSinger.getSingerName());
+        }
         actionEvent.consume();
     }
 
@@ -266,6 +296,22 @@ public final class KaraokeFxmlController implements Initializable {
     public void handleNextSinger(ActionEvent actionEvent) {
         buttonNextSinger.setDisable(true);
         this.activeSinger = indexedSingers.removeFirst();
+        setMediaPlayer(true);
+        actionEvent.consume();
+    }
+
+    public void handleShowVideoScreen(ActionEvent actionEvent) {
+        karaokeMediaViewFxmlController.showMediaView();
+        actionEvent.consume();
+    }
+
+    public void handleShowSingerLineup(ActionEvent actionEvent) {
+        singerLineupFxmlController.showSingerLineup();
+        actionEvent.consume();
+    }
+
+    private void setMediaPlayer(boolean updateSingerIndex) {
+        /* Set up the media player */
         this.mediaPlayer = new MediaPlayer(activeSinger.getMedia());
         mediaPlayer.totalDurationProperty().addListener((observable, oldValue, newValue) -> {
             double totalSecs = newValue.toSeconds();
@@ -289,7 +335,7 @@ public final class KaraokeFxmlController implements Initializable {
         });
         mediaPlayer.setAudioSpectrumListener((timestamp, duration, magnitudes, phases) -> {
             ObservableList<XYChart.Data<String, Double>> chartData = FXCollections.observableArrayList();
-            double volume = getVolume();
+            double volume = mediaPlayer.getVolume();
             for (int phase = 0; phase < phases.length; phase++) {
                 float magnitude = magnitudes[phase];
                 chartData.add(new XYChart.Data<>(
@@ -323,7 +369,26 @@ public final class KaraokeFxmlController implements Initializable {
 
         mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.stop());
         mediaPlayer.statusProperty().addListener((observable, oldValue, newValue) -> labelStatus.setText(newValue.toString()));
-        updateSingerIndex();
+        labelArtist.setText(mediaPlayer.getMedia().getMetadata().getOrDefault(ARTIST, mediaPlayer.getMedia().getMetadata().getOrDefault(ALBUM_ARTIST, UNKNOWN)).toString());
+        labelTitle.setText(mediaPlayer.getMedia().getMetadata().getOrDefault(TITLE, UNKNOWN).toString());
+        mediaPlayer.getMedia().getMetadata().addListener((MapChangeListener<String, Object>) change -> {
+            if (change.wasAdded()) {
+                String key = change.getKey();
+                switch (key) {
+                    case ARTIST, ALBUM_ARTIST:
+                        labelArtist.setText(change.getValueAdded().toString());
+                        break;
+                    case TITLE:
+                        labelTitle.setText(change.getValueAdded().toString());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        if (updateSingerIndex) {
+            updateSingerIndex();
+        }
         labelSingerName.setText(activeSinger.getSingerName());
         labelSingerName.setVisible(true);
         buttonPlay.setDisable(false);
@@ -332,18 +397,7 @@ public final class KaraokeFxmlController implements Initializable {
         buttonCompleteSinger.setDisable(false);
         buttonReQueueSinger.setDisable(false);
         buttonChangeSong.setDisable(false);
-        buttonAddNotes.setDisable(false);
-        actionEvent.consume();
-    }
-
-    public void handleShowVideoScreen(ActionEvent actionEvent) {
-        karaokeMediaViewFxmlController.showMediaView();
-        actionEvent.consume();
-    }
-
-    public void handleShowSingerLineup(ActionEvent actionEvent) {
-        singerLineupFxmlController.showSingerLineup();
-        actionEvent.consume();
+        buttonChangeSinger.setDisable(false);
     }
 
     private void resetMediaView() {
@@ -360,7 +414,7 @@ public final class KaraokeFxmlController implements Initializable {
         buttonCompleteSinger.setDisable(true);
         buttonReQueueSinger.setDisable(true);
         buttonChangeSong.setDisable(true);
-        buttonAddNotes.setDisable(true);
+        buttonChangeSinger.setDisable(true);
         buttonNextSinger.setDisable(indexedSingers.isEmpty());
         labelTime.setText("");
         labelSong.setText("");
@@ -450,6 +504,5 @@ public final class KaraokeFxmlController implements Initializable {
         }
         return 0.0;
     }
-
-
+    
 }
