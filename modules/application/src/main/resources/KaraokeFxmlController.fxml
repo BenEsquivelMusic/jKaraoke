@@ -32,90 +32,82 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.Color?>
-<?import javafx.scene.text.Font?>
-
-<AnchorPane prefHeight="597.0" prefWidth="932.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bem.KaraokeFxmlController">
-    <VBox prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<?import javafx.scene.text.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="597.0" prefWidth="932.0" stylesheets="@style.css"
+            xmlns="http://javafx.com/javafx/23.0.1" fx:controller="karaoke.KaraokeFxmlController">
+    <VBox prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <MenuBar prefWidth="930.0" VBox.vgrow="NEVER">
             <Menu mnemonicParsing="false" text="File">
-                <MenuItem mnemonicParsing="false" text="New" />
-                <MenuItem mnemonicParsing="false" text="Open…" />
-                <Menu mnemonicParsing="false" text="Open Recent" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Close" />
-                <MenuItem mnemonicParsing="false" text="Save" />
-                <MenuItem mnemonicParsing="false" text="Save As…" />
-                <MenuItem mnemonicParsing="false" text="Revert" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Preferences…" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Quit" />
+                <MenuItem mnemonicParsing="false" text="New"/>
+                <MenuItem mnemonicParsing="false" text="Open…"/>
+                <Menu mnemonicParsing="false" text="Open Recent"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false" text="Close"/>
+                <MenuItem mnemonicParsing="false" text="Save"/>
+                <MenuItem mnemonicParsing="false" text="Save As…"/>
+                <MenuItem mnemonicParsing="false" text="Revert"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false" text="Preferences…"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false" text="Quit"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
-                <MenuItem mnemonicParsing="false" text="Library" />
-                <MenuItem mnemonicParsing="false" text="Redo" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Cut" />
-                <MenuItem mnemonicParsing="false" text="Copy" />
-                <MenuItem mnemonicParsing="false" text="Paste" />
-                <MenuItem mnemonicParsing="false" text="Delete" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Select All" />
-                <MenuItem mnemonicParsing="false" text="Unselect All" />
+                <MenuItem mnemonicParsing="false" text="Library"/>
+                <MenuItem mnemonicParsing="false" text="Redo"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false" text="Cut"/>
+                <MenuItem mnemonicParsing="false" text="Copy"/>
+                <MenuItem mnemonicParsing="false" text="Paste"/>
+                <MenuItem mnemonicParsing="false" text="Delete"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false" text="Select All"/>
+                <MenuItem mnemonicParsing="false" text="Unselect All"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Window">
-                <MenuItem mnemonicParsing="false" onAction="#handleShowVideoScreen" text="Video Screen" />
-                <MenuItem mnemonicParsing="false" onAction="#handleShowSingerLineup" text="Singer Lineup" />
+                <MenuItem mnemonicParsing="false" onAction="#handleShowVideoScreen" text="Video Screen"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleShowSingerLineup" text="Singer Lineup"/>
             </Menu>
         </MenuBar>
-        <SplitPane dividerPositions="0.31721698113207547" focusTraversable="true" style="-fx-background-color: #2D2D30;" VBox.vgrow="ALWAYS">
+        <SplitPane dividerPositions="0.31721698113207547" focusTraversable="true" style="-fx-background-color: #2D2D30;"
+                   VBox.vgrow="ALWAYS">
             <AnchorPane prefWidth="268.0">
                 <padding>
-                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                 </padding>
-                <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="584.0" prefWidth="291.0" text="Singer Queue" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="584.0" prefWidth="291.0"
+                            text="Singer Queue" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <VBox spacing="1.0">
                         <AnchorPane maxHeight="-Infinity" prefHeight="35.0" prefWidth="257.0">
-                            <Button layoutX="1.0" mnemonicParsing="false" onAction="#handleAddSinger" text="+" />
-                            <Button layoutX="30.0" mnemonicParsing="false" onAction="#handleDeleteSinger" text="--" />
-                            <Button layoutX="60.0" mnemonicParsing="false" onAction="#handleMoveSingerBack" text="&lt;" />
-                            <Button layoutX="89.0" mnemonicParsing="false" onAction="#handleMoveSingerForward" text="&gt;" />
+                            <Button layoutX="1.0" mnemonicParsing="false" onAction="#handleAddSinger" text="+"/>
+                            <Button layoutX="30.0" mnemonicParsing="false" onAction="#handleDeleteSinger" text="--"/>
+                            <Button layoutX="60.0" mnemonicParsing="false" onAction="#handleMoveSingerBack"
+                                    text="&lt;"/>
+                            <Button layoutX="89.0" mnemonicParsing="false" onAction="#handleMoveSingerForward"
+                                    text="&gt;"/>
                         </AnchorPane>
-                        <ScrollPane fitToHeight="true" fitToWidth="true" prefWidth="257.0" style="-fx-background-color: #2D2D30;">
+                        <ScrollPane fitToHeight="true" fitToWidth="true" prefWidth="257.0"
+                                    style="-fx-background-color: #2D2D30;">
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="880.0" prefWidth="255.0">
-                                <TableView fx:id="tableViewSingerQueue" prefHeight="508.0" prefWidth="255.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <TableView fx:id="tableViewSingerQueue" prefHeight="508.0" prefWidth="255.0"
+                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <columns>
-                                        <TableColumn fx:id="columnSinger" editable="false" prefWidth="75.0" sortable="false" text="Singer" />
-                                        <TableColumn fx:id="columnSong" editable="false" prefWidth="75.0" sortable="false" text="Track" />
+                                        <TableColumn fx:id="columnSinger" editable="false" prefWidth="75.0"
+                                                     sortable="false" text="Singer"/>
+                                        <TableColumn fx:id="columnSong" editable="false" prefWidth="75.0"
+                                                     sortable="false" text="Track"/>
                                     </columns>
                                     <columnResizePolicy>
-                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                                     </columnResizePolicy>
                                 </TableView>
                             </AnchorPane>
@@ -124,78 +116,143 @@
                 </TitledPane>
             </AnchorPane>
             <AnchorPane>
-                <SplitPane dividerPositions="0.7" orientation="VERTICAL" prefHeight="593.0" prefWidth="631.0" style="-fx-background-color: #2D2D30;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <SplitPane dividerPositions="0.7" orientation="VERTICAL" prefHeight="593.0" prefWidth="631.0"
+                           style="-fx-background-color: #2D2D30;" AnchorPane.bottomAnchor="0.0"
+                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="362.0" prefWidth="629.0">
                         <padding>
-                            <Insets left="5.0" right="5.0" top="5.0" />
+                            <Insets left="5.0" right="5.0" top="5.0"/>
                         </padding>
-                        <TitledPane alignment="CENTER" collapsible="false" layoutX="5.0" layoutY="5.0" text="Active Track" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TitledPane alignment="CENTER" collapsible="false" layoutX="5.0" layoutY="5.0"
+                                    text="Active Track" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <VBox prefHeight="411.0" prefWidth="629.0">
                                 <AnchorPane prefHeight="203.0" prefWidth="443.0" VBox.vgrow="ALWAYS">
-                                    <GridPane prefHeight="280.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <GridPane prefHeight="280.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0"
+                                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                              AnchorPane.topAnchor="0.0">
                                         <columnConstraints>
-                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                                         </columnConstraints>
                                         <rowConstraints>
-                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                                         </rowConstraints>
                                         <AnchorPane>
-                                            <GridPane prefHeight="119.0" prefWidth="595.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <GridPane prefHeight="119.0" prefWidth="595.0" AnchorPane.bottomAnchor="0.0"
+                                                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                                      AnchorPane.topAnchor="0.0">
                                                 <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.0" minWidth="10.0" prefWidth="114.0" />
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="547.0" minWidth="10.0" prefWidth="481.0" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.0"
+                                                                       minWidth="10.0" prefWidth="114.0"/>
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="547.0"
+                                                                       minWidth="10.0" prefWidth="481.0"/>
                                                 </columnConstraints>
                                                 <rowConstraints>
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                    vgrow="SOMETIMES"/>
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                    vgrow="SOMETIMES"/>
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                    vgrow="SOMETIMES"/>
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                    vgrow="SOMETIMES"/>
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                    vgrow="SOMETIMES"/>
                                                 </rowConstraints>
                                                 <padding>
-                                                    <Insets bottom="10.0" />
+                                                    <Insets bottom="10.0"/>
                                                 </padding>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
-                                                    <Label alignment="CENTER_RIGHT" layoutX="135.0" layoutY="12.0" prefHeight="40.0" prefWidth="298.0" text="Duration:   " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                    <Label alignment="CENTER_RIGHT" layoutX="135.0" layoutY="12.0"
+                                                           prefHeight="40.0" prefWidth="298.0" text="Duration:   "
+                                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                                 </AnchorPane>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                                    <Label fx:id="labelTime" layoutX="110.0" layoutY="15.0" prefHeight="37.0" prefWidth="419.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0"
+                                                            GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                    <Label fx:id="labelTime" layoutX="110.0" layoutY="15.0"
+                                                           prefHeight="37.0" prefWidth="419.0"
+                                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                                 </AnchorPane>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                                    <Label alignment="CENTER_RIGHT" layoutX="135.0" layoutY="12.0" prefHeight="40.0" prefWidth="298.0" text="Track:   " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                    <Label alignment="CENTER_RIGHT" layoutX="135.0" layoutY="12.0"
+                                                           prefHeight="40.0" prefWidth="298.0" text="Track:   "
+                                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                                 </AnchorPane>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
-                                                    <Label fx:id="labelSong" cacheShape="false" layoutX="14.0" layoutY="6.0" prefHeight="36.0" prefWidth="419.0" textOverrun="LEADING_WORD_ELLIPSIS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0"
+                                                            GridPane.columnIndex="1">
+                                                    <Label fx:id="labelSong" cacheShape="false" layoutX="14.0"
+                                                           layoutY="6.0" prefHeight="36.0" prefWidth="419.0"
+                                                           textOverrun="LEADING_WORD_ELLIPSIS"
+                                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                                 </AnchorPane>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
-                                                    <Label alignment="CENTER_RIGHT" layoutX="135.0" layoutY="11.0" prefHeight="39.0" prefWidth="298.0" text="Status:   " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                    <Label alignment="CENTER_RIGHT" layoutX="135.0" layoutY="11.0"
+                                                           prefHeight="39.0" prefWidth="298.0" text="Status:   "
+                                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                                 </AnchorPane>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                                    <Label fx:id="labelStatus" layoutX="33.0" layoutY="10.0" prefHeight="36.0" prefWidth="419.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0"
+                                                            GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                    <Label fx:id="labelStatus" layoutX="33.0" layoutY="10.0"
+                                                           prefHeight="36.0" prefWidth="419.0"
+                                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                                 </AnchorPane>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                    <Label fx:id="labelTitle" layoutX="98.0" layoutY="3.0" prefHeight="22.0" prefWidth="481.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0"
+                                                            GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                    <Label fx:id="labelTitle" layoutX="98.0" layoutY="3.0"
+                                                           prefHeight="22.0" prefWidth="481.0"
+                                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                                 </AnchorPane>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-                                                    <Label alignment="CENTER_RIGHT" layoutX="57.0" layoutY="3.0" prefHeight="22.0" prefWidth="114.0" text="Title:   " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                    <Label alignment="CENTER_RIGHT" layoutX="57.0" layoutY="3.0"
+                                                           prefHeight="22.0" prefWidth="114.0" text="Title:   "
+                                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                                 </AnchorPane>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
-                                                    <Label alignment="CENTER_RIGHT" layoutX="69.0" layoutY="3.0" prefHeight="22.0" prefWidth="114.0" text="Artist:   " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                    <Label alignment="CENTER_RIGHT" layoutX="69.0" layoutY="3.0"
+                                                           prefHeight="22.0" prefWidth="114.0" text="Artist:   "
+                                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                                 </AnchorPane>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                    <Label fx:id="labelArtist" prefHeight="22.0" prefWidth="481.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0"
+                                                            GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                    <Label fx:id="labelArtist" prefHeight="22.0" prefWidth="481.0"
+                                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                                 </AnchorPane>
                                             </GridPane>
                                         </AnchorPane>
                                         <AnchorPane prefHeight="190.0" prefWidth="595.0" GridPane.rowIndex="1">
-                                            <AnchorPane layoutX="2.0" layoutY="2.0" prefHeight="150.0" prefWidth="595.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                <BarChart fx:id="barChartAudioSpectrum" alternativeColumnFillVisible="true" barGap="0.0" categoryGap="0.0" horizontalGridLinesVisible="false" legendVisible="false" prefHeight="150.0" prefWidth="595.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="29.0" AnchorPane.topAnchor="0.0">
+                                            <AnchorPane layoutX="2.0" layoutY="2.0" prefHeight="150.0" prefWidth="595.0"
+                                                        AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <BarChart fx:id="barChartAudioSpectrum"
+                                                          alternativeColumnFillVisible="true" barGap="0.0"
+                                                          categoryGap="0.0" horizontalGridLinesVisible="false"
+                                                          legendVisible="false" prefHeight="150.0" prefWidth="595.0"
+                                                          verticalGridLinesVisible="false"
+                                                          verticalZeroLineVisible="false" AnchorPane.bottomAnchor="0.0"
+                                                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="29.0"
+                                                          AnchorPane.topAnchor="0.0">
                                                     <xAxis>
-                                                        <CategoryAxis fx:id="categoryAxisPhase" autoRanging="false" side="BOTTOM" startMargin="1.0" tickMarkVisible="false" />
+                                                        <CategoryAxis fx:id="categoryAxisPhase" autoRanging="false"
+                                                                      side="BOTTOM" startMargin="1.0"
+                                                                      tickMarkVisible="false"/>
                                                     </xAxis>
                                                     <yAxis>
-                                                        <NumberAxis fx:id="numberAxisBarMagnitude" autoRanging="false" minorTickVisible="false" prefWidth="28.0" side="LEFT" tickLabelGap="5.0" tickMarkVisible="false" tickUnit="10.0" upperBound="80.0" />
+                                                        <NumberAxis fx:id="numberAxisBarMagnitude" autoRanging="false"
+                                                                    minorTickVisible="false" prefWidth="28.0"
+                                                                    side="LEFT" tickLabelGap="5.0"
+                                                                    tickMarkVisible="false" tickUnit="10.0"
+                                                                    upperBound="80.0"/>
                                                     </yAxis>
                                                 </BarChart>
                                             </AnchorPane>
@@ -203,50 +260,84 @@
                                     </GridPane>
                                 </AnchorPane>
                                 <AnchorPane prefHeight="52.0" prefWidth="362.0" VBox.vgrow="NEVER">
-                                    <Slider fx:id="sliderTrack" blockIncrement="1.0" disable="true" layoutX="30.0" layoutY="19.0" prefHeight="14.0" prefWidth="620.0" showTickMarks="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="19.0">
+                                    <Slider fx:id="sliderTrack" blockIncrement="1.0" disable="true" layoutX="30.0"
+                                            layoutY="19.0" prefHeight="14.0" prefWidth="620.0" showTickMarks="true"
+                                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                            AnchorPane.topAnchor="19.0">
                                         <padding>
-                                            <Insets left="40.0" right="40.0" />
+                                            <Insets left="40.0" right="40.0"/>
                                         </padding>
                                     </Slider>
                                 </AnchorPane>
                                 <AnchorPane prefHeight="49.0" prefWidth="658.0" VBox.vgrow="NEVER">
-                                    <AnchorPane layoutY="-9.0" prefHeight="49.0" prefWidth="619.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                        <HBox prefHeight="49.0" prefWidth="619.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <AnchorPane layoutY="-9.0" prefHeight="49.0" prefWidth="619.0"
+                                                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <HBox prefHeight="49.0" prefWidth="619.0" AnchorPane.bottomAnchor="0.0"
+                                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                              AnchorPane.topAnchor="0.0">
                                             <AnchorPane prefHeight="49.0" prefWidth="298.0">
-                                                <ButtonBar buttonOrder="" layoutX="41.0" prefHeight="39.0" prefWidth="257.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="41.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <ButtonBar buttonOrder="" layoutX="41.0" prefHeight="39.0"
+                                                           prefWidth="257.0" AnchorPane.bottomAnchor="10.0"
+                                                           AnchorPane.leftAnchor="41.0" AnchorPane.rightAnchor="0.0"
+                                                           AnchorPane.topAnchor="0.0">
                                                     <buttons>
                                                         <AnchorPane>
-                                                            <Button fx:id="buttonPlay" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#handlePlay" prefHeight="58.0" prefWidth="75.0" style="-fx-background-color: green;" text="Play" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <Button fx:id="buttonPlay" defaultButton="true"
+                                                                    disable="true" mnemonicParsing="false"
+                                                                    onAction="#handlePlay" prefHeight="58.0"
+                                                                    prefWidth="75.0"
+                                                                    style="-fx-background-color: green;" text="Play"
+                                                                    AnchorPane.bottomAnchor="0.0"
+                                                                    AnchorPane.leftAnchor="0.0"
+                                                                    AnchorPane.rightAnchor="0.0"
+                                                                    AnchorPane.topAnchor="0.0">
                                                                 <font>
-                                                                    <Font size="14.0" />
+                                                                    <Font size="14.0"/>
                                                                 </font>
                                                             </Button>
                                                         </AnchorPane>
                                                         <AnchorPane>
-                                                            <Button fx:id="buttonStop" cancelButton="true" disable="true" mnemonicParsing="false" onAction="#handleStop" prefHeight="39.0" prefWidth="75.0" style="-fx-background-color: red;" text="Stop" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <Button fx:id="buttonStop" cancelButton="true"
+                                                                    disable="true" mnemonicParsing="false"
+                                                                    onAction="#handleStop" prefHeight="39.0"
+                                                                    prefWidth="75.0" style="-fx-background-color: red;"
+                                                                    text="Stop" AnchorPane.bottomAnchor="0.0"
+                                                                    AnchorPane.leftAnchor="0.0"
+                                                                    AnchorPane.rightAnchor="0.0"
+                                                                    AnchorPane.topAnchor="0.0">
                                                                 <font>
-                                                                    <Font size="14.0" />
+                                                                    <Font size="14.0"/>
                                                                 </font>
                                                             </Button>
                                                         </AnchorPane>
                                                         <AnchorPane>
-                                                            <Button fx:id="buttonPause" disable="true" mnemonicParsing="false" onAction="#handlePause" prefHeight="49.0" prefWidth="75.0" style="-fx-background-color: grey;" text="Pause" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <Button fx:id="buttonPause" disable="true"
+                                                                    mnemonicParsing="false" onAction="#handlePause"
+                                                                    prefHeight="49.0" prefWidth="75.0"
+                                                                    style="-fx-background-color: grey;" text="Pause"
+                                                                    AnchorPane.bottomAnchor="0.0"
+                                                                    AnchorPane.leftAnchor="0.0"
+                                                                    AnchorPane.rightAnchor="0.0"
+                                                                    AnchorPane.topAnchor="0.0">
                                                                 <font>
-                                                                    <Font size="14.0" />
+                                                                    <Font size="14.0"/>
                                                                 </font>
                                                             </Button>
                                                         </AnchorPane>
                                                     </buttons>
                                                     <opaqueInsets>
-                                                        <Insets />
+                                                        <Insets/>
                                                     </opaqueInsets>
                                                 </ButtonBar>
                                             </AnchorPane>
                                             <AnchorPane prefHeight="49.0" prefWidth="107.0">
-                                                <Label layoutX="55.0" layoutY="16.0" text="Volume" />
+                                                <Label layoutX="55.0" layoutY="16.0" text="Volume"/>
                                             </AnchorPane>
                                             <AnchorPane prefHeight="200.0" prefWidth="89.0">
-                                                <Slider fx:id="sliderVolume" blockIncrement="1.0" prefHeight="12.0" prefWidth="140.0" value="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="18.5" />
+                                                <Slider fx:id="sliderVolume" blockIncrement="1.0" prefHeight="12.0"
+                                                        prefWidth="140.0" value="50.0" AnchorPane.leftAnchor="0.0"
+                                                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="18.5"/>
                                             </AnchorPane>
                                         </HBox>
                                     </AnchorPane>
@@ -256,40 +347,64 @@
                     </AnchorPane>
                     <AnchorPane maxHeight="300.0" minHeight="150.0" minWidth="0.0" prefHeight="200.0" prefWidth="160.0">
                         <padding>
-                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                         </padding>
-                        <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="271.0" prefWidth="668.0" text="Active Singer" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="271.0"
+                                    prefWidth="668.0" text="Active Singer" AnchorPane.bottomAnchor="0.0"
+                                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                <BorderPane prefHeight="216.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <BorderPane prefHeight="216.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0"
+                                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                            AnchorPane.topAnchor="0.0">
                                     <bottom>
                                         <AnchorPane prefHeight="44.0" prefWidth="595.0">
                                             <BorderPane.margin>
-                                                <Insets left="10.0" />
+                                                <Insets left="10.0"/>
                                             </BorderPane.margin>
                                             <AnchorPane prefHeight="49.0" prefWidth="107.0">
-                                                <Button fx:id="buttonChangeSong" disable="true" mnemonicParsing="false" onAction="#handleChangeSong" prefHeight="25.0" prefWidth="107.0" text="Change Song" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Button fx:id="buttonChangeSong" disable="true" mnemonicParsing="false"
+                                                        onAction="#handleChangeSong" prefHeight="25.0" prefWidth="107.0"
+                                                        text="Change Song" AnchorPane.bottomAnchor="0.0"
+                                                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                                        AnchorPane.topAnchor="0.0"/>
                                             </AnchorPane>
                                             <AnchorPane layoutX="117.0">
-                                                <Button fx:id="buttonChangeSinger" disable="true" mnemonicParsing="false" onAction="#handleChangeSinger" prefHeight="49.0" prefWidth="107.0" text="Change Singer" AnchorPane.bottomAnchor="-49.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Button fx:id="buttonChangeSinger" disable="true"
+                                                        mnemonicParsing="false" onAction="#handleChangeSinger"
+                                                        prefHeight="49.0" prefWidth="107.0" text="Change Singer"
+                                                        AnchorPane.bottomAnchor="-49.0" AnchorPane.leftAnchor="0.0"
+                                                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                             </AnchorPane>
                                             <AnchorPane layoutX="234.0">
-                                                <Button fx:id="buttonReQueueSinger" disable="true" mnemonicParsing="false" onAction="#handleReQueueSinger" prefHeight="49.0" prefWidth="107.0" text="Queue Singer" AnchorPane.bottomAnchor="-49.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Button fx:id="buttonReQueueSinger" disable="true"
+                                                        mnemonicParsing="false" onAction="#handleReQueueSinger"
+                                                        prefHeight="49.0" prefWidth="107.0" text="Queue Singer"
+                                                        AnchorPane.bottomAnchor="-49.0" AnchorPane.leftAnchor="0.0"
+                                                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                             </AnchorPane>
                                             <AnchorPane layoutX="351.0">
-                                                <Button fx:id="buttonCompleteSinger" disable="true" mnemonicParsing="false" onAction="#handleCompleteSinger" prefHeight="49.0" prefWidth="107.0" text="Complete Singer" AnchorPane.bottomAnchor="-49.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Button fx:id="buttonCompleteSinger" disable="true"
+                                                        mnemonicParsing="false" onAction="#handleCompleteSinger"
+                                                        prefHeight="49.0" prefWidth="107.0" text="Complete Singer"
+                                                        AnchorPane.bottomAnchor="-49.0" AnchorPane.leftAnchor="0.0"
+                                                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                             </AnchorPane>
                                             <AnchorPane layoutX="468.0">
-                                                <Button fx:id="buttonNextSinger" disable="true" mnemonicParsing="false" onAction="#handleNextSinger" prefHeight="49.0" prefWidth="107.0" text="Next Singer" AnchorPane.bottomAnchor="-49.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Button fx:id="buttonNextSinger" disable="true" mnemonicParsing="false"
+                                                        onAction="#handleNextSinger" prefHeight="49.0" prefWidth="107.0"
+                                                        text="Next Singer" AnchorPane.bottomAnchor="-49.0"
+                                                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                                        AnchorPane.topAnchor="0.0"/>
                                             </AnchorPane>
                                         </AnchorPane>
                                     </bottom>
                                     <top>
                                         <Label fx:id="labelSingerName" BorderPane.alignment="CENTER">
                                             <font>
-                                                <Font size="28.0" />
+                                                <Font size="28.0"/>
                                             </font>
                                             <BorderPane.margin>
-                                                <Insets top="5.0" />
+                                                <Insets top="5.0"/>
                                             </BorderPane.margin>
                                         </Label>
                                     </top>
@@ -302,17 +417,17 @@
         </SplitPane>
         <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
             <padding>
-                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
             </padding>
             <Label fx:id="labelQueue" maxHeight="1.7976931348623157E308" text="Queue: 0" HBox.hgrow="ALWAYS">
                 <font>
-                    <Font size="11.0" />
+                    <Font size="11.0"/>
                 </font>
                 <textFill>
-                    <Color red="0.625" green="0.625" blue="0.625" />
+                    <Color red="0.625" green="0.625" blue="0.625"/>
                 </textFill>
             </Label>
-            <Pane HBox.hgrow="ALWAYS" />
+            <Pane HBox.hgrow="ALWAYS"/>
         </HBox>
     </VBox>
 </AnchorPane>

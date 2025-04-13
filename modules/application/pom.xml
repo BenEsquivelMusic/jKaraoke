@@ -68,7 +68,7 @@
                         <launcher>jkaraoke</launcher>
                         <jlinkImageName>jkaraoke</jlinkImageName>
                         <jlinkZipName>jkaraoke</jlinkZipName>
-                        <mainClass>com.bem.Main</mainClass>
+                        <mainClass>karaoke.Main</mainClass>
                     </configuration>
                 </plugin>
             </plugins>

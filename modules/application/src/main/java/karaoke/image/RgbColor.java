@@ -1,4 +1,4 @@
-package com.bem.image;
+package karaoke.image;
 
 import javafx.scene.paint.Color;
 

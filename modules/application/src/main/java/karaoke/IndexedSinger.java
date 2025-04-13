@@ -1,4 +1,4 @@
-package com.bem;
+package karaoke;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

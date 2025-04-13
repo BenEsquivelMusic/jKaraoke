@@ -1,9 +1,5 @@
-package com.bem;
+package karaoke;
 
-import com.bem.image.CdgImageReader;
-import com.bem.image.CdgImageViewer;
-import com.bem.image.ImageReader;
-import com.bem.image.ImageViewer;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -11,6 +7,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
+import karaoke.image.CdgImageReader;
+import karaoke.image.CdgImageViewer;
+import karaoke.image.ImageReader;
+import karaoke.image.ImageViewer;
 
 import java.io.File;
 import java.net.URI;

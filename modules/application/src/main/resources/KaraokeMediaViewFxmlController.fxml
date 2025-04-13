@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<?import com.bem.CdgMediaView?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.media.MediaView?>
+<?import karaoke.CdgMediaView?>
 <Pane xmlns:fx="http://javafx.com/fxml/1" fx:id="mediaViewPane" stylesheets="@style.css"
-      fx:controller="com.bem.KaraokeMediaViewFxmlController"
+      fx:controller="karaoke.KaraokeMediaViewFxmlController"
       xmlns="http://javafx.com/javafx/23.0.1">
     <Canvas fx:id="mediaViewCanvas"/>
     <CdgMediaView fx:id="cdgMediaView" fitHeight="${mediaViewPane.height}" fitWidth="${mediaViewPane.width}"/>

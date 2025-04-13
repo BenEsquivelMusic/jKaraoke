@@ -1,4 +1,4 @@
-package com.bem.image;
+package karaoke.image;
 
 public sealed interface ImageViewer permits CdgImageViewer {
 

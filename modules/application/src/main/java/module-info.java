@@ -5,8 +5,8 @@ module application {
     requires javafx.graphics;
     requires javafx.swing;
     requires java.desktop;
-    exports com.bem;
-    opens com.bem to javafx.fxml;
-    exports com.bem.image;
-    opens com.bem.image to javafx.fxml;
+    exports karaoke;
+    opens karaoke to javafx.fxml;
+    exports karaoke.image;
+    opens karaoke.image to javafx.fxml;
 }

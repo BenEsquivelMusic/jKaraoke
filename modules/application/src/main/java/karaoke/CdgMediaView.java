@@ -1,7 +1,7 @@
-package com.bem;
+package karaoke;
 
-import com.bem.image.ImageReader;
 import javafx.scene.image.ImageView;
+import karaoke.image.ImageReader;
 
 import java.util.Objects;
 

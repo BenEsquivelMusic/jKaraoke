@@ -1,4 +1,4 @@
-package com.bem.image;
+package karaoke.image;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;

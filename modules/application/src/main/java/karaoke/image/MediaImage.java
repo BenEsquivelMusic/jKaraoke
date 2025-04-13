@@ -1,4 +1,4 @@
-package com.bem.image;
+package karaoke.image;
 
 import java.awt.image.BufferedImage;
 import java.util.concurrent.locks.ReentrantLock;
