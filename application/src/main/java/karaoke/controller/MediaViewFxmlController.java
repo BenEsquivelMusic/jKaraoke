@@ -1,4 +1,4 @@
-package karaoke;
+package karaoke.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,10 +7,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
-import karaoke.image.CdgImageReader;
-import karaoke.image.CdgImageViewer;
-import karaoke.image.ImageReader;
-import karaoke.image.ImageViewer;
+import karaoke.media.*;
 
 import java.io.File;
 import java.net.URI;
@@ -19,7 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public final class KaraokeMediaViewFxmlController implements Initializable {
+public final class MediaViewFxmlController implements Initializable {
 
     @FXML
     private Pane mediaViewPane;

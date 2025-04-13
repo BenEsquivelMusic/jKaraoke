@@ -1,4 +1,4 @@
-package karaoke.image;
+package karaoke.media;
 
 public sealed interface ImageViewer permits CdgImageViewer {
 

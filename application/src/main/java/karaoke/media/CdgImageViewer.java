@@ -1,4 +1,4 @@
-package karaoke.image;
+package karaoke.media;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;

@@ -1,4 +1,4 @@
-package karaoke;
+package karaoke.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.MediaException;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import karaoke.IndexedSinger;
 
 import java.io.File;
 import java.net.URL;

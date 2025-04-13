@@ -4,9 +4,9 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.media.MediaView?>
-<?import karaoke.CdgMediaView?>
+<?import karaoke.media.CdgMediaView?>
 <Pane xmlns:fx="http://javafx.com/fxml/1" fx:id="mediaViewPane" stylesheets="@style.css"
-      fx:controller="karaoke.KaraokeMediaViewFxmlController"
+      fx:controller="karaoke.controller.MediaViewFxmlController"
       xmlns="http://javafx.com/javafx/23.0.1">
     <Canvas fx:id="mediaViewCanvas"/>
     <CdgMediaView fx:id="cdgMediaView" fitHeight="${mediaViewPane.height}" fitWidth="${mediaViewPane.width}"/>

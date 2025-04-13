@@ -1,6 +1,7 @@
-package karaoke.image;
+package karaoke.media;
 
 import javafx.scene.paint.Color;
+import karaoke.Lock;
 
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;

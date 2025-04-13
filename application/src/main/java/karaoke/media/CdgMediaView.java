@@ -1,7 +1,6 @@
-package karaoke;
+package karaoke.media;
 
 import javafx.scene.image.ImageView;
-import karaoke.image.ImageReader;
 
 import java.util.Objects;
 

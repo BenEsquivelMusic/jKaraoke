@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import karaoke.controller.KaraokeFxmlController;
 
 import java.net.URL;
 import java.util.Objects;
@@ -29,7 +30,7 @@ public final class Main extends Application {
         FXMLLoader loader = new FXMLLoader(fxmlURL);
         Parent root = loader.load();
         KaraokeFxmlController controller = loader.getController();
-        this.closeConsumer = unused -> controller.closeMediaPlayer();
+        this.closeConsumer = _ -> controller.closeMediaPlayer();
         Scene scene = new Scene(root);
         primaryStage.setTitle("JKaraoke");
         primaryStage.setScene(scene);

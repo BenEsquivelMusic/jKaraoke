@@ -1,4 +1,4 @@
-package karaoke.image;
+package karaoke;
 
 import java.util.concurrent.locks.ReentrantLock;
 

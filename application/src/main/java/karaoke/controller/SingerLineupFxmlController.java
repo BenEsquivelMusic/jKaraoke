@@ -1,4 +1,4 @@
-package karaoke;
+package karaoke.controller;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,6 +8,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import karaoke.IndexedSinger;
 
 import java.net.URL;
 import java.util.ResourceBundle;

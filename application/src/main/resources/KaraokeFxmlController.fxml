@@ -41,7 +41,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="597.0" prefWidth="932.0" stylesheets="@style.css"
-            xmlns="http://javafx.com/javafx/23.0.1" fx:controller="karaoke.KaraokeFxmlController">
+            xmlns="http://javafx.com/javafx/23.0.1" fx:controller="karaoke.controller.KaraokeFxmlController">
     <VBox prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <MenuBar prefWidth="930.0" VBox.vgrow="NEVER">

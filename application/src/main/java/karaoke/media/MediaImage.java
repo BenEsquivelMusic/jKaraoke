@@ -1,4 +1,6 @@
-package karaoke.image;
+package karaoke.media;
+
+import karaoke.Lock;
 
 import java.awt.image.BufferedImage;
 import java.util.concurrent.locks.ReentrantLock;
