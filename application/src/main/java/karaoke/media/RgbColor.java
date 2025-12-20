@@ -29,12 +29,12 @@ public final class RgbColor {
 
     public void set(byte red, byte green, byte blue, int index) {
         Objects.checkIndex(index, NUM_BYTES);
-        try (Lock ignored = new Lock(lock)) {
+        try (Lock _ = new Lock(lock)) {
             this.r[index] = (byte) (red << NUM_BITS | red);
             this.g[index] = (byte) (green << NUM_BITS | green);
             this.b[index] = (byte) (blue << NUM_BITS | blue);
         } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
+            throw new ImageViewerException(e);
         }
     }
 

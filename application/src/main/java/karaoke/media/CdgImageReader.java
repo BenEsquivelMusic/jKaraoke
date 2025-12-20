@@ -12,9 +12,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public final class CdgImageReader extends TimerTask implements ImageReader {
 
     // frames displayed per second, CD+G has 300 packets per second -> 300/FPS = packets per frame
-    private static final int FramesPerSecond = 20;
-    private static final int PacketsPerFrame = 300 / FramesPerSecond;
-    private static final int FrameInterval = 1000 / FramesPerSecond;
+    private static final int FRAMES_PER_SECOND = 20;
+    private static final int PACKETS_PER_FRAME = 300 / FRAMES_PER_SECOND;
+    private static final int FRAME_INTERVAL = 1000 / FRAMES_PER_SECOND;
 
     private static final byte SC_MASK = 0x3F;
     private static final byte CDG_CMD = 0x09;
@@ -45,7 +45,7 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
             this.dis = new RandomAccessFile(cdgFile, "r");
             this.fileLength = dis.length();
         } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+            throw new ImageReaderException(e);
         }
         this.timer = new Timer(true);
         this.lock = new ReentrantLock();
@@ -54,7 +54,7 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
 
     @Override
     public void initialize() {
-        timer.scheduleAtFixedRate(this, 0, FrameInterval);
+        timer.scheduleAtFixedRate(this, 0, FRAME_INTERVAL);
     }
 
     @Override
@@ -70,16 +70,16 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
     @Override
     public void stop() {
         timer.cancel();
-        try (Lock ignored = new Lock(lock)) {
+        try (Lock _ = new Lock(lock)) {
             dis.close();
         } catch (Exception e) {
-            throw new IllegalStateException(e);
+            throw new ImageReaderException(e);
         }
     }
 
     @Override
     public void seek(double percent) {
-        try (Lock ignored = new Lock(lock)) {
+        try (Lock _ = new Lock(lock)) {
             long seekPosition = getSeekPosition(percent);
             if (seekPosition > 0.0) {
                 dis.seek(seekPosition);
@@ -87,7 +87,7 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
                 dis.seek(0);
             }
         } catch (Exception e) {
-            throw new IllegalStateException(e);
+            throw new ImageReaderException(e);
         }
     }
 
@@ -104,40 +104,27 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
         }
         int processedPackets = 0;
         int bytesRead = 0;
-        while ((processedPackets < PacketsPerFrame) && ((bytesRead = readPacket()) == 24)) {
+        while ((processedPackets < PACKETS_PER_FRAME) && ((bytesRead = readPacket()) == 24)) {
             processedPackets++;
             if ((packet[0] & SC_MASK) == CDG_CMD) {   // CD+G?
                 switch (packet[1] & SC_MASK) {
                     case CDG_MEMORY_PRESET:
-                        int color = packet[4] & 0x0F;
-                        int repeat = packet[5] & 0x0F;
-                        if (repeat == 0) {
-                            viewer.clearScreen(color);
-                        }
+                        cdgMemoryPreset();
                         break;
                     case CDG_BORDER_PRESET:
-                        int backgroundColor = packet[4] & 0x0F;
-                        viewer.clearBorder(backgroundColor);
+                        cdgBorderPreset();
                         break;
                     case CDG_LOAD_COLOR_TABLE_LOW:
-                        for (int i = 0; i < 8; i++) {
-                            byte[] cols = decodeColor(packet[4 + i * 2], packet[5 + i * 2]);
-                            viewer.setColor(cols[0], cols[1], cols[2], i);
-                            viewer.applyColor();
-                        }
+                        loadColorTable(0);
                         break;
                     case CDG_LOAD_COLOR_TABLE_HIGH:
-                        for (int i = 0; i < 8; i++) {
-                            byte[] cols = decodeColor(packet[4 + i * 2], packet[5 + i * 2]);
-                            viewer.setColor(cols[0], cols[1], cols[2], i + 8);
-                            viewer.applyColor();
-                        }
+                        loadColorTable(8);
                         break;
                     case CDG_TILE_BLOCK:
-                        paintTile(packet, false);
+                        paintTile(false);
                         break;
                     case CDG_TILE_BLOCK_XOR:
-                        paintTile(packet, true);
+                        paintTile(true);
                         break;
                     default:
                         break;
@@ -149,40 +136,29 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
             pause();
         }
     }
-
-    private long getSeekPosition(double percent) {
-        double position = percent * fileLength;
-        position -= (position % 24.0);
-        return (long) position;
-    }
-
-    private void setPaused(boolean pause) {
-        if (isPaused != pause) {
-            try (Lock ignored = new Lock(lock)) {
-                this.isPaused = pause;
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
+    
+    private void cdgMemoryPreset() {
+        int color = packet[4] & 0x0F;
+        int repeat = packet[5] & 0x0F;
+        if (repeat == 0) {
+            viewer.clearScreen(color);
         }
     }
 
-    private int readPacket() {
-        try {
-            return dis.read(packet);
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+    private void cdgBorderPreset() {
+        int backgroundColor = packet[4] & 0x0F;
+        viewer.clearBorder(backgroundColor);
+    }
+
+    private void loadColorTable(int indexOffset) {
+        for (int i = 0; i < 8; i++) {
+            byte[] cols = decodeColor(packet[4 + i * 2], packet[5 + i * 2]);
+            viewer.setColor(cols[0], cols[1], cols[2], i + indexOffset);
+            viewer.applyColor();
         }
     }
 
-    private byte[] decodeColor(byte high, byte low) {
-        return new byte[]{
-                (byte) ((high & SC_MASK) >> 2),
-                (byte) (((high & 0x3) << 2) | ((low >> 4) & 0x3)),
-                (byte) (low & 0x0F)
-        };
-    }
-
-    private void paintTile(byte[] packet, boolean xor) {
+    private void paintTile(boolean xor) {
         int color0 = packet[4] & 0x0F;
         int color1 = packet[5] & 0x0F;
         int row = packet[6] & 0x1F;
@@ -203,6 +179,38 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
                 scanline = scanline >> 1;
             }
         }
+    }
+
+    private long getSeekPosition(double percent) {
+        double position = percent * fileLength;
+        position -= (position % 24.0);
+        return (long) position;
+    }
+
+    private void setPaused(boolean pause) {
+        if (isPaused != pause) {
+            try (Lock _ = new Lock(lock)) {
+                this.isPaused = pause;
+            } catch (Exception e) {
+                throw new ImageReaderException(e);
+            }
+        }
+    }
+
+    private int readPacket() {
+        try {
+            return dis.read(packet);
+        } catch (IOException e) {
+            throw new ImageReaderException(e);
+        }
+    }
+
+    private byte[] decodeColor(byte high, byte low) {
+        return new byte[]{
+                (byte) ((high & SC_MASK) >> 2),
+                (byte) (((high & 0x3) << 2) | ((low >> 4) & 0x3)),
+                (byte) (low & 0x0F)
+        };
     }
 
 }

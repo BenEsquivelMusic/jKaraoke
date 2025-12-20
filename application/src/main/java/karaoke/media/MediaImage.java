@@ -16,10 +16,10 @@ public final class MediaImage {
     }
 
     public void setElement(int index, int color) {
-        try (Lock ignored = new Lock(lock)) {
+        try (Lock _ = new Lock(lock)) {
             image.getRaster().getDataBuffer().setElem(index, color);
         } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
+            throw new ImageViewerException(e);
         }
     }
 
@@ -32,10 +32,10 @@ public final class MediaImage {
     }
 
     public void setImage(BufferedImage image) {
-        try (Lock ignored = new Lock(lock)) {
+        try (Lock _ = new Lock(lock)) {
             this.image = image;
         } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
+            throw new ImageViewerException(e);
         }
     }
 
