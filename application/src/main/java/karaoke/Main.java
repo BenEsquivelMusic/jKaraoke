@@ -1,14 +1,17 @@
 package karaoke;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import karaoke.controller.KaraokeFxmlController;
 
 import java.net.URL;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class Main extends Application {
@@ -32,8 +35,10 @@ public final class Main extends Application {
         KaraokeFxmlController controller = loader.getController();
         this.closeConsumer = _ -> controller.closeMediaPlayer();
         Scene scene = new Scene(root);
+        primaryStage.getIcons().add(new Image(Optional.ofNullable(Main.class.getResourceAsStream(ApplicationIcons.APPLICATION_ICON)).orElseThrow()));
         primaryStage.setTitle("JKaraoke");
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(_ -> Platform.exit());
         primaryStage.show();
     }
 

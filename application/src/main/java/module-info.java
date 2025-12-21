@@ -3,7 +3,6 @@ module application {
     requires javafx.controls;
     requires javafx.media;
     requires javafx.graphics;
-    requires javafx.swing;
     requires java.desktop;
     exports karaoke;
     opens karaoke to javafx.fxml;

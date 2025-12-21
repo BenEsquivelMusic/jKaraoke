@@ -1,11 +1,11 @@
 package karaoke.media;
 
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
+import java.awt.*;
 import java.awt.image.*;
 
 
@@ -88,8 +88,54 @@ public final class CdgImageViewer implements ImageViewer {
 
     @Override
     public void draw() {
-        Image fxImage = SwingFXUtils.toFXImage(image.getImage(), null);
+        Image fxImage = getWritableImage(image.getImage());
         imageView.setImage(fxImage);
+    }
+
+    private WritableImage getWritableImage(BufferedImage bufferedImage) {
+        int width = bufferedImage.getWidth();
+        int height = bufferedImage.getHeight();
+        switch (bufferedImage.getType()) {
+            case 2:
+            case 3:
+                break;
+            default:
+                BufferedImage tempBufferedImage = new BufferedImage(width, height, 3);
+                Graphics2D graphics = tempBufferedImage.createGraphics();
+                graphics.drawImage(bufferedImage, 0, 0, null);
+                graphics.dispose();
+                bufferedImage = tempBufferedImage;
+        }
+
+        WritableImage writableImage = new WritableImage(width, height);
+
+        PixelWriter pixelWriter = writableImage.getPixelWriter();
+        DataBuffer pixelBuffer = bufferedImage.getRaster().getDataBuffer();
+        int scanLine = getScanLine(bufferedImage);
+        pixelWriter.setPixels(
+                0,
+                0,
+                width,
+                height,
+                PixelFormat.getIntArgbInstance(),
+                getPixels(pixelBuffer),
+                pixelBuffer.getOffset(),
+                scanLine);
+        return writableImage;
+    }
+
+    private int getScanLine(BufferedImage bufferedImage) {
+        int scanLine = 0;
+        SampleModel sampleModel = bufferedImage.getRaster().getSampleModel();
+        if (sampleModel instanceof SinglePixelPackedSampleModel singlePixelPackedSampleModel) {
+            scanLine = singlePixelPackedSampleModel.getScanlineStride();
+        }
+        return scanLine;
+    }
+
+    private int[] getPixels(DataBuffer buffer) {
+        DataBufferInt pixelBuffer = (DataBufferInt) buffer;
+        return pixelBuffer.getData();
     }
 
 }
