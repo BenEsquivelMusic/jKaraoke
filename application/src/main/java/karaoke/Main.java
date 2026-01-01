@@ -38,7 +38,10 @@ public final class Main extends Application {
         primaryStage.getIcons().add(new Image(Optional.ofNullable(Main.class.getResourceAsStream(ApplicationIcons.APPLICATION_ICON)).orElseThrow()));
         primaryStage.setTitle("JKaraoke");
         primaryStage.setScene(scene);
-        primaryStage.setOnCloseRequest(_ -> Platform.exit());
+        primaryStage.setOnCloseRequest(_ -> {
+            stop();
+            Platform.exit();
+        });
         primaryStage.show();
     }
 
