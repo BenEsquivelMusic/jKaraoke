@@ -54,6 +54,22 @@ public final class KaraokeFxmlController implements Initializable {
     private InvalidationListener seekTrackListener;
     private InvalidationListener volumeControlListener;
 
+    /* Menu Items */
+    @FXML
+    private MenuItem menuItemNew;
+
+    @FXML
+    private MenuItem menuItemOpen;
+
+    @FXML
+    private MenuItem menuItemClose;
+
+    @FXML
+    private MenuItem menuItemSave;
+
+    @FXML
+    private MenuItem menuItemSaveAs;
+
     /* Buttons */
     @FXML
     private Button buttonPlay;
@@ -174,7 +190,7 @@ public final class KaraokeFxmlController implements Initializable {
                 return Double.valueOf(Integer.parseInt(splitNumberText[0]) + 60.0);
             }
         });
-
+        disableMenuItemButtons(false);
     }
 
     public void handleMoveSingerForward(ActionEvent actionEvent) {
@@ -412,6 +428,16 @@ public final class KaraokeFxmlController implements Initializable {
         buttonChangeSinger.setDisable(false);
     }
 
+    private void disableMenuItemButtons(boolean disableNewAndOpenItems) {
+        menuItemNew.setDisable(disableNewAndOpenItems);
+        menuItemOpen.setDisable(disableNewAndOpenItems);
+
+        boolean disableSaveAndCloseButtons = !disableNewAndOpenItems;
+        menuItemSave.setDisable(disableSaveAndCloseButtons);
+        menuItemSaveAs.setDisable(disableSaveAndCloseButtons);
+        menuItemClose.setDisable(disableSaveAndCloseButtons);
+    }
+
     private void resetMediaView() {
         closeMediaPlayer();
         this.activeSinger = null;
@@ -519,4 +545,45 @@ public final class KaraokeFxmlController implements Initializable {
         return 0.0;
     }
 
+    public void handleNewEvent(ActionEvent actionEvent) {
+        //TODO
+        disableMenuItemButtons(true);
+        actionEvent.consume();
+    }
+
+    public void handleOpenEvent(ActionEvent actionEvent) {
+        //TODO
+        disableMenuItemButtons(true);
+        actionEvent.consume();
+    }
+
+    public void handleCloseMenu(ActionEvent actionEvent) {
+        //TODO
+        disableMenuItemButtons(false);
+
+        resetMediaView();
+        indexedSingers.removeIf(_ -> true);
+        updateSingerIndex();
+        actionEvent.consume();
+    }
+
+    public void handleSaveEvent(ActionEvent actionEvent) {
+        //TODO
+        actionEvent.consume();
+    }
+
+    public void handleSaveAsEvent(ActionEvent actionEvent) {
+        //TODO
+        actionEvent.consume();
+    }
+
+    public void handleExitApplication(ActionEvent actionEvent) {
+        //TODO
+        actionEvent.consume();
+    }
+
+    public void handleSettings(ActionEvent actionEvent) {
+        //TODO
+        actionEvent.consume();
+    }
 }

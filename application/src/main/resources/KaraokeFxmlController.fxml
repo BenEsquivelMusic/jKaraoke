@@ -46,30 +46,17 @@
           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <MenuBar prefWidth="930.0" VBox.vgrow="NEVER">
             <Menu mnemonicParsing="false" text="File">
-                <MenuItem mnemonicParsing="false" text="New"/>
-                <MenuItem mnemonicParsing="false" text="Open…"/>
-                <Menu mnemonicParsing="false" text="Open Recent"/>
+                <MenuItem fx:id="menuItemNew" mnemonicParsing="false" onAction="#handleNewEvent" text="New"/>
+                <MenuItem fx:id="menuItemOpen" mnemonicParsing="false" onAction="#handleOpenEvent" text="Open…"/>
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem mnemonicParsing="false" text="Close"/>
-                <MenuItem mnemonicParsing="false" text="Save"/>
-                <MenuItem mnemonicParsing="false" text="Save As…"/>
-                <MenuItem mnemonicParsing="false" text="Revert"/>
+                <MenuItem fx:id="menuItemClose" mnemonicParsing="false" onAction="#handleCloseMenu" text="Close"/>
+                <MenuItem fx:id="menuItemSave" mnemonicParsing="false" onAction="#handleSaveEvent" text="Save"/>
+                <MenuItem fx:id="menuItemSaveAs" mnemonicParsing="false" onAction="#handleSaveAsEvent" text="Save As…"/>
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem mnemonicParsing="false" text="Preferences…"/>
-                <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem mnemonicParsing="false" text="Quit"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleExitApplication" text="Exit"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
-                <MenuItem mnemonicParsing="false" text="Library"/>
-                <MenuItem mnemonicParsing="false" text="Redo"/>
-                <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem mnemonicParsing="false" text="Cut"/>
-                <MenuItem mnemonicParsing="false" text="Copy"/>
-                <MenuItem mnemonicParsing="false" text="Paste"/>
-                <MenuItem mnemonicParsing="false" text="Delete"/>
-                <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem mnemonicParsing="false" text="Select All"/>
-                <MenuItem mnemonicParsing="false" text="Unselect All"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleSettings" text="Settings"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Window">
                 <MenuItem mnemonicParsing="false" onAction="#handleShowVideoScreen" text="Video Screen"/>
