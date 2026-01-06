@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
@@ -18,6 +19,9 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public final class EventFxmlController implements Initializable {
+
+    @FXML
+    private Label labelSaveFile;
 
     @FXML
     private TextField txtEventFile;
@@ -42,6 +46,7 @@ public final class EventFxmlController implements Initializable {
 
     public void setIsCreateEvent(boolean isCreateEvent) {
         this.isCreateEvent = isCreateEvent;
+        labelSaveFile.setText("Folder");
     }
     public String getEventName() {
         return txtEventName.getText();
