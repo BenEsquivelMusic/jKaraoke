@@ -51,7 +51,6 @@
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem fx:id="menuItemClose" mnemonicParsing="false" onAction="#handleCloseMenu" text="Close"/>
                 <MenuItem fx:id="menuItemSave" mnemonicParsing="false" onAction="#handleSaveEvent" text="Save"/>
-                <MenuItem fx:id="menuItemSaveAs" mnemonicParsing="false" onAction="#handleSaveAsEvent" text="Save As…"/>
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem mnemonicParsing="false" onAction="#handleExitApplication" text="Exit"/>
             </Menu>
@@ -73,7 +72,8 @@
                             text="Singer Queue" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                             AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <VBox spacing="1.0">
-                        <AnchorPane maxHeight="-Infinity" prefHeight="35.0" prefWidth="257.0">
+                        <AnchorPane fx:id="anchorPaneQueueButtons" maxHeight="-Infinity" prefHeight="35.0"
+                                    prefWidth="257.0">
                             <Button layoutX="1.0" mnemonicParsing="false" onAction="#handleAddSinger" text="+"/>
                             <Button layoutX="30.0" mnemonicParsing="false" onAction="#handleDeleteSinger" text="--"/>
                             <Button layoutX="60.0" mnemonicParsing="false" onAction="#handleMoveSingerBack"

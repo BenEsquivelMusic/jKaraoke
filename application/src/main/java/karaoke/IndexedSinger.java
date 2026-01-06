@@ -19,6 +19,10 @@ public final class IndexedSinger {
         initMedia();
     }
 
+    public Singer getSinger() {
+        return new Singer(singerName.getValue(), songFile.getValue());
+    }
+
     public IndexedSinger copy() {
         return new IndexedSinger(getIndex(), getSingerName(), getSongFile());
     }
