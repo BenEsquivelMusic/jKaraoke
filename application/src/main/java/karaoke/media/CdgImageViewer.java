@@ -7,6 +7,10 @@ import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
+
 
 public final class CdgImageViewer implements ImageViewer {
 
@@ -17,14 +21,14 @@ public final class CdgImageViewer implements ImageViewer {
     private final Canvas backgroundCanvas;
     private final ImageView imageView;
     private final RgbColor rgbColor;
-    private final int[] pixelIndices;
+    private final MemorySegment pixelIndices;
     private final WritableImage writableImage;
 
     public CdgImageViewer(Canvas backgroundCanvas, ImageView imageView) {
         this.backgroundCanvas = backgroundCanvas;
         this.imageView = imageView;
         this.rgbColor = new RgbColor();
-        this.pixelIndices = new int[NUM_PIXELS];
+        this.pixelIndices = Arena.ofAuto().allocate(ValueLayout.JAVA_INT, NUM_PIXELS);
         this.writableImage = new WritableImage(CDG_WIDTH, CDG_HEIGHT);
         draw();
     }
@@ -38,9 +42,9 @@ public final class CdgImageViewer implements ImageViewer {
     public void setPixel(int x, int y, int color, boolean xor) {
         int index = y * CDG_WIDTH + x;
         if (xor) {
-            color ^= pixelIndices[index];
+            color ^= pixelIndices.getAtIndex(ValueLayout.JAVA_INT, index);
         }
-        pixelIndices[index] = color;
+        pixelIndices.setAtIndex(ValueLayout.JAVA_INT, index, color);
     }
 
     @Override
@@ -54,21 +58,21 @@ public final class CdgImageViewer implements ImageViewer {
         int pos = 0;
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < CDG_WIDTH; x++) {
-                pixelIndices[pos++] = col;
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
             }
         }
         for (int y = 6; y < 210; y++) {
             for (int x = 0; x < 3; x++) {
-                pixelIndices[pos++] = col;
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
             }
             pos += 294;
             for (int x = 297; x < CDG_WIDTH; x++) {
-                pixelIndices[pos++] = col;
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
             }
         }
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < CDG_WIDTH; x++) {
-                pixelIndices[pos++] = col;
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
             }
         }
     }
@@ -77,7 +81,7 @@ public final class CdgImageViewer implements ImageViewer {
     public void clearScreen(int col) {
         for (int y = 6; y < 210; y++) {
             for (int x = 3; x < 297; x++) {
-                pixelIndices[y * CDG_WIDTH + x] = col;
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, y * CDG_WIDTH + x, col);
             }
         }
     }
@@ -86,7 +90,7 @@ public final class CdgImageViewer implements ImageViewer {
     public void draw() {
         int[] argbPixels = new int[NUM_PIXELS];
         for (int i = 0; i < NUM_PIXELS; i++) {
-            argbPixels[i] = rgbColor.getArgb(pixelIndices[i]);
+            argbPixels[i] = rgbColor.getArgb(pixelIndices.getAtIndex(ValueLayout.JAVA_INT, i));
         }
         PixelWriter pixelWriter = writableImage.getPixelWriter();
         pixelWriter.setPixels(0, 0, CDG_WIDTH, CDG_HEIGHT, PixelFormat.getIntArgbInstance(), argbPixels, 0, CDG_WIDTH);
