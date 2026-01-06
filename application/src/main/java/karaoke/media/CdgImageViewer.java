@@ -2,11 +2,14 @@ package karaoke.media;
 
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.*;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 
-import java.awt.*;
-import java.awt.image.*;
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
 
 
 public final class CdgImageViewer implements ImageViewer {
@@ -18,18 +21,15 @@ public final class CdgImageViewer implements ImageViewer {
     private final Canvas backgroundCanvas;
     private final ImageView imageView;
     private final RgbColor rgbColor;
-    private final MediaImage image;
+    private final MemorySegment pixelIndices;
+    private final WritableImage writableImage;
 
     public CdgImageViewer(Canvas backgroundCanvas, ImageView imageView) {
         this.backgroundCanvas = backgroundCanvas;
         this.imageView = imageView;
         this.rgbColor = new RgbColor();
-
-        DataBuffer dataBuffer = new DataBufferByte(new byte[NUM_PIXELS], NUM_PIXELS, 0);
-        int[] bitMasks = new int[]{(byte) 0xf};
-        SampleModel sampleModel = new SinglePixelPackedSampleModel(DataBuffer.TYPE_BYTE, CDG_WIDTH, CDG_HEIGHT, bitMasks);
-        WritableRaster raster = Raster.createWritableRaster(sampleModel, dataBuffer, null);
-        this.image = new MediaImage(new BufferedImage(rgbColor.createColorModel(), raster, false, null));
+        this.pixelIndices = Arena.ofAuto().allocate(ValueLayout.JAVA_INT, NUM_PIXELS);
+        this.writableImage = new WritableImage(CDG_WIDTH, CDG_HEIGHT);
         draw();
     }
 
@@ -40,15 +40,15 @@ public final class CdgImageViewer implements ImageViewer {
 
     @Override
     public void setPixel(int x, int y, int color, boolean xor) {
+        int index = y * CDG_WIDTH + x;
         if (xor) {
-            color ^= image.getElement(y * 300 + x);
+            color ^= pixelIndices.getAtIndex(ValueLayout.JAVA_INT, index);
         }
-        image.setElement(y * 300 + x, color);
+        pixelIndices.setAtIndex(ValueLayout.JAVA_INT, index, color);
     }
 
     @Override
     public void applyColor() {
-        image.setImage(new BufferedImage(rgbColor.createColorModel(), image.getImage().getRaster(), false, null));
         draw();
     }
 
@@ -57,22 +57,22 @@ public final class CdgImageViewer implements ImageViewer {
         Platform.runLater(() -> backgroundCanvas.getGraphicsContext2D().setFill(rgbColor.createColor(col)));
         int pos = 0;
         for (int y = 0; y < 6; y++) {
-            for (int x = 0; x < 300; x++) {
-                image.setElement(pos++, col);
+            for (int x = 0; x < CDG_WIDTH; x++) {
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
             }
         }
         for (int y = 6; y < 210; y++) {
             for (int x = 0; x < 3; x++) {
-                image.setElement(pos++, col);
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
             }
             pos += 294;
-            for (int x = 297; x < 300; x++) {
-                image.setElement(pos++, col);
+            for (int x = 297; x < CDG_WIDTH; x++) {
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
             }
         }
         for (int y = 0; y < 6; y++) {
-            for (int x = 0; x < 300; x++) {
-                image.setElement(pos++, col);
+            for (int x = 0; x < CDG_WIDTH; x++) {
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
             }
         }
     }
@@ -81,61 +81,20 @@ public final class CdgImageViewer implements ImageViewer {
     public void clearScreen(int col) {
         for (int y = 6; y < 210; y++) {
             for (int x = 3; x < 297; x++) {
-                image.setElement(y * 300 + x, col);
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, y * CDG_WIDTH + x, col);
             }
         }
     }
 
     @Override
     public void draw() {
-        Image fxImage = getWritableImage(image.getImage());
-        imageView.setImage(fxImage);
-    }
-
-    private WritableImage getWritableImage(BufferedImage bufferedImage) {
-        int width = bufferedImage.getWidth();
-        int height = bufferedImage.getHeight();
-        switch (bufferedImage.getType()) {
-            case 2:
-            case 3:
-                break;
-            default:
-                BufferedImage tempBufferedImage = new BufferedImage(width, height, 3);
-                Graphics2D graphics = tempBufferedImage.createGraphics();
-                graphics.drawImage(bufferedImage, 0, 0, null);
-                graphics.dispose();
-                bufferedImage = tempBufferedImage;
+        int[] argbPixels = new int[NUM_PIXELS];
+        for (int i = 0; i < NUM_PIXELS; i++) {
+            argbPixels[i] = rgbColor.getArgb(pixelIndices.getAtIndex(ValueLayout.JAVA_INT, i));
         }
-
-        WritableImage writableImage = new WritableImage(width, height);
-
         PixelWriter pixelWriter = writableImage.getPixelWriter();
-        DataBuffer pixelBuffer = bufferedImage.getRaster().getDataBuffer();
-        int scanLine = getScanLine(bufferedImage);
-        pixelWriter.setPixels(
-                0,
-                0,
-                width,
-                height,
-                PixelFormat.getIntArgbInstance(),
-                getPixels(pixelBuffer),
-                pixelBuffer.getOffset(),
-                scanLine);
-        return writableImage;
-    }
-
-    private int getScanLine(BufferedImage bufferedImage) {
-        int scanLine = 0;
-        SampleModel sampleModel = bufferedImage.getRaster().getSampleModel();
-        if (sampleModel instanceof SinglePixelPackedSampleModel singlePixelPackedSampleModel) {
-            scanLine = singlePixelPackedSampleModel.getScanlineStride();
-        }
-        return scanLine;
-    }
-
-    private int[] getPixels(DataBuffer buffer) {
-        DataBufferInt pixelBuffer = (DataBufferInt) buffer;
-        return pixelBuffer.getData();
+        pixelWriter.setPixels(0, 0, CDG_WIDTH, CDG_HEIGHT, PixelFormat.getIntArgbInstance(), argbPixels, 0, CDG_WIDTH);
+        imageView.setImage(writableImage);
     }
 
 }
