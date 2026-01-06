@@ -3,8 +3,6 @@ package karaoke.media;
 import javafx.scene.paint.Color;
 import karaoke.Lock;
 
-import java.awt.image.ColorModel;
-import java.awt.image.IndexColorModel;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -38,8 +36,11 @@ public final class RgbColor {
         }
     }
 
-    public ColorModel createColorModel() {
-        return new IndexColorModel(NUM_BITS, NUM_BYTES, r, g, b);
+    public int getArgb(int index) {
+        int red = BIT_MASK & r[index];
+        int green = BIT_MASK & g[index];
+        int blue = BIT_MASK & b[index];
+        return (0xFF << 24) | (red << 16) | (green << 8) | blue;
     }
 
     public Color createColor(int col) {
