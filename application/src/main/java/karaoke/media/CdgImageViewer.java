@@ -24,6 +24,9 @@ public final class CdgImageViewer implements ImageViewer {
     private final MemorySegment pixelIndices;
     private final WritableImage writableImage;
 
+    // Transparent color index (-1 means no transparency)
+    private int transparentColorIndex = -1;
+
     public CdgImageViewer(Canvas backgroundCanvas, ImageView imageView) {
         this.backgroundCanvas = backgroundCanvas;
         this.imageView = imageView;
@@ -87,10 +90,89 @@ public final class CdgImageViewer implements ImageViewer {
     }
 
     @Override
+    public void scroll(int hScroll, int vScroll, int color, boolean copy) {
+        // Decode horizontal scroll command and offset
+        // bits 5-4: command (0=none, 1=right 6px, 2=left 6px)
+        // bits 2-0: offset (0-5 pixels)
+        int hCmd = (hScroll >> 4) & 0x03;
+        int hOffset = hScroll & 0x07;
+        if (hOffset > 5) hOffset = 5;
+
+        // Decode vertical scroll command and offset
+        // bits 5-4: command (0=none, 1=down 12px, 2=up 12px)
+        // bits 3-0: offset (0-11 pixels)
+        int vCmd = (vScroll >> 4) & 0x03;
+        int vOffset = vScroll & 0x0F;
+        if (vOffset > 11) vOffset = 11;
+
+        // Calculate actual pixel shifts based on command
+        int hShift = 0;
+        if (hCmd == 1) {
+            hShift = 6;  // Scroll right by 6 pixels
+        } else if (hCmd == 2) {
+            hShift = -6; // Scroll left by 6 pixels
+        }
+
+        int vShift = 0;
+        if (vCmd == 1) {
+            vShift = 12;  // Scroll down by 12 pixels
+        } else if (vCmd == 2) {
+            vShift = -12; // Scroll up by 12 pixels
+        }
+
+        // If no scroll command, just return (offset only affects display position)
+        if (hShift == 0 && vShift == 0) {
+            return;
+        }
+
+        // Create a temporary buffer for the scrolled pixels
+        int[] tempBuffer = new int[NUM_PIXELS];
+
+        for (int y = 0; y < CDG_HEIGHT; y++) {
+            for (int x = 0; x < CDG_WIDTH; x++) {
+                int srcX = x - hShift;
+                int srcY = y - vShift;
+
+                int pixelValue;
+                if (copy) {
+                    // Scroll Copy: wrap around
+                    srcX = ((srcX % CDG_WIDTH) + CDG_WIDTH) % CDG_WIDTH;
+                    srcY = ((srcY % CDG_HEIGHT) + CDG_HEIGHT) % CDG_HEIGHT;
+                    pixelValue = pixelIndices.getAtIndex(ValueLayout.JAVA_INT, srcY * CDG_WIDTH + srcX);
+                } else {
+                    // Scroll Preset: fill with color if out of bounds
+                    if (srcX < 0 || srcX >= CDG_WIDTH || srcY < 0 || srcY >= CDG_HEIGHT) {
+                        pixelValue = color;
+                    } else {
+                        pixelValue = pixelIndices.getAtIndex(ValueLayout.JAVA_INT, srcY * CDG_WIDTH + srcX);
+                    }
+                }
+                tempBuffer[y * CDG_WIDTH + x] = pixelValue;
+            }
+        }
+
+        // Copy the temporary buffer back to pixelIndices
+        for (int i = 0; i < NUM_PIXELS; i++) {
+            pixelIndices.setAtIndex(ValueLayout.JAVA_INT, i, tempBuffer[i]);
+        }
+    }
+
+    @Override
+    public void setTransparentColor(int colorIndex) {
+        this.transparentColorIndex = colorIndex;
+    }
+
+    @Override
     public void draw() {
         int[] argbPixels = new int[NUM_PIXELS];
         for (int i = 0; i < NUM_PIXELS; i++) {
-            argbPixels[i] = rgbColor.getArgb(pixelIndices.getAtIndex(ValueLayout.JAVA_INT, i));
+            int colorIndex = pixelIndices.getAtIndex(ValueLayout.JAVA_INT, i);
+            if (colorIndex == transparentColorIndex) {
+                // Make this pixel fully transparent (alpha = 0)
+                argbPixels[i] = rgbColor.getArgb(colorIndex) & 0x00FFFFFF;
+            } else {
+                argbPixels[i] = rgbColor.getArgb(colorIndex);
+            }
         }
         PixelWriter pixelWriter = writableImage.getPixelWriter();
         pixelWriter.setPixels(0, 0, CDG_WIDTH, CDG_HEIGHT, PixelFormat.getIntArgbInstance(), argbPixels, 0, CDG_WIDTH);
