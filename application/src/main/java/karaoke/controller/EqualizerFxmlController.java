@@ -11,27 +11,46 @@ import javafx.stage.Stage;
 import karaoke.settings.EqualizerSettings;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 public final class EqualizerFxmlController implements Initializable {
 
-    @FXML private VBox equalizerPane;
-    @FXML private ComboBox<EqualizerSettings> presetComboBox;
-    @FXML private Slider slider60Hz;
-    @FXML private Slider slider170Hz;
-    @FXML private Slider slider310Hz;
-    @FXML private Slider slider600Hz;
-    @FXML private Slider slider1kHz;
-    @FXML private Slider slider3kHz;
-    @FXML private Slider slider6kHz;
-    @FXML private Slider slider12kHz;
-    @FXML private Slider slider14kHz;
-    @FXML private Slider slider16kHz;
-    @FXML private TextField customPresetName;
-    @FXML private Button saveCustomButton;
-    @FXML private Button deleteCustomButton;
-    @FXML private CheckBox enableEqualizer;
+    @FXML
+    private VBox equalizerPane;
+    @FXML
+    private ComboBox<EqualizerSettings> presetComboBox;
+    @FXML
+    private Slider slider60Hz;
+    @FXML
+    private Slider slider170Hz;
+    @FXML
+    private Slider slider310Hz;
+    @FXML
+    private Slider slider600Hz;
+    @FXML
+    private Slider slider1kHz;
+    @FXML
+    private Slider slider3kHz;
+    @FXML
+    private Slider slider6kHz;
+    @FXML
+    private Slider slider12kHz;
+    @FXML
+    private Slider slider14kHz;
+    @FXML
+    private Slider slider16kHz;
+    @FXML
+    private TextField customPresetName;
+    @FXML
+    private Button saveCustomButton;
+    @FXML
+    private Button deleteCustomButton;
+    @FXML
+    private CheckBox enableEqualizer;
 
     private List<Slider> bandSliders;
     private ObservableList<EqualizerSettings> presets;
@@ -44,22 +63,22 @@ public final class EqualizerFxmlController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         bandSliders = Arrays.asList(slider60Hz, slider170Hz, slider310Hz, slider600Hz,
                 slider1kHz, slider3kHz, slider6kHz, slider12kHz, slider14kHz, slider16kHz);
-        
+
         customPresets = new ArrayList<>();
         presets = FXCollections.observableArrayList();
         loadDefaultPresets();
-        
+
         presetComboBox.setItems(presets);
         presetComboBox.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
             if (newValue != null && !isUpdatingSliders) {
                 applyPreset(newValue);
             }
         });
-        
+
         for (Slider slider : bandSliders) {
             configureSlider(slider);
         }
-        
+
         enableEqualizer.selectedProperty().addListener((_, _, enabled) -> {
             bandSliders.forEach(s -> s.setDisable(!enabled));
             presetComboBox.setDisable(!enabled);
@@ -69,20 +88,20 @@ public final class EqualizerFxmlController implements Initializable {
                 resetToFlat();
             }
         });
-        
+
         presetComboBox.getSelectionModel().selectFirst();
     }
 
     private void loadDefaultPresets() {
         presets.addAll(Arrays.asList(
-            EqualizerSettings.flat(),
-            EqualizerSettings.rock(),
-            EqualizerSettings.pop(),
-            EqualizerSettings.jazz(),
-            EqualizerSettings.classical(),
-            EqualizerSettings.vocal(),
-            EqualizerSettings.bass(),
-            EqualizerSettings.treble()
+                EqualizerSettings.flat(),
+                EqualizerSettings.rock(),
+                EqualizerSettings.pop(),
+                EqualizerSettings.jazz(),
+                EqualizerSettings.classical(),
+                EqualizerSettings.vocal(),
+                EqualizerSettings.bass(),
+                EqualizerSettings.treble()
         ));
     }
 
@@ -100,6 +119,7 @@ public final class EqualizerFxmlController implements Initializable {
 
     public void setMediaPlayer(MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
+        applyEqualizerSettings();
     }
 
     private void configureSlider(Slider slider) {

@@ -41,6 +41,7 @@ public final class KaraokeFxmlController implements Initializable {
     private static final String ADD_SONG_FXML_CONTROLLER = "/AddSongFxmlController.fxml";
     private static final String SINGER_LINEUP_FXML_CONTROLLER = "/SingerLineupFxmlController.fxml";
     private static final String KARAOKE_MEDIA_VIEW_FXML_CONTROLLER = "/MediaViewFxmlController.fxml";
+    private static final String EQ_FXML_CONTROLLER = "/EqualizerFxmlController.fxml";
     private static final String EVENT_CONTROLLER = "/EventFxmlController.fxml";
 
     private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
@@ -50,6 +51,7 @@ public final class KaraokeFxmlController implements Initializable {
 
     private SingerLineupFxmlController singerLineupFxmlController;
     private MediaViewFxmlController mediaViewFxmlController;
+    private EqualizerFxmlController equalizerFxmlController;
 
     private IndexedSinger activeSinger;
     private MediaPlayer mediaPlayer;
@@ -162,6 +164,7 @@ public final class KaraokeFxmlController implements Initializable {
             mediaPlayer.dispose();
         }
         mediaViewFxmlController.closeMediaView();
+        equalizerFxmlController.setMediaPlayer(null);
     }
 
     @Override
@@ -176,6 +179,7 @@ public final class KaraokeFxmlController implements Initializable {
         tableViewSingerQueue.setItems(indexedSingers);
         this.singerLineupFxmlController = loadController(SINGER_LINEUP_FXML_CONTROLLER, ApplicationIcons.MONITOR_ICON, "Karaoke Singer Lineup", controller -> controller.setSingers(indexedSingers), false);
         this.mediaViewFxmlController = loadController(KARAOKE_MEDIA_VIEW_FXML_CONTROLLER, ApplicationIcons.MONITOR_ICON, "Karaoke Media View", null, false);
+        this.equalizerFxmlController = loadController(EQ_FXML_CONTROLLER, ApplicationIcons.APPLICATION_ICON, "Equalizer", null, false);
         ObservableList<String> phaseCategories = FXCollections.observableList(new ArrayList<>(10));
         IntStream.rangeClosed(1, 10).forEach(phase -> phaseCategories.add(new AudioBand(phase).toString()));
         categoryAxisPhase.setCategories(phaseCategories);
@@ -215,7 +219,7 @@ public final class KaraokeFxmlController implements Initializable {
     }
 
     public void handleAddSinger(ActionEvent actionEvent) {
-        AddSongFxmlController addSongFxmlController = loadController(ADD_SONG_FXML_CONTROLLER, ApplicationIcons.APPLICATION_ICON,"Choose Singer and Song", null, true);
+        AddSongFxmlController addSongFxmlController = loadController(ADD_SONG_FXML_CONTROLLER, ApplicationIcons.APPLICATION_ICON, "Choose Singer and Song", null, true);
         if (addSongFxmlController.isFormCompleted()) {
             IndexedSinger singer = addSongFxmlController.getSinger();
             indexedSingers.add(singer);
@@ -418,6 +422,9 @@ public final class KaraokeFxmlController implements Initializable {
             }
         });
 
+        //Synchronize EQ Controller with new Media Player
+        equalizerFxmlController.setMediaPlayer(mediaPlayer);
+
         //Finalize application controls and display
         if (updateSingerIndex) {
             updateSingerIndex();
@@ -615,6 +622,11 @@ public final class KaraokeFxmlController implements Initializable {
 
     public void handleSettings(ActionEvent actionEvent) {
         //TODO
+        actionEvent.consume();
+    }
+
+    public void handleShowEqWindow(ActionEvent actionEvent) {
+        equalizerFxmlController.showEqualizer();
         actionEvent.consume();
     }
 }
