@@ -159,13 +159,13 @@ public final class KaraokeFxmlController implements Initializable {
     }
 
     public void closeMediaPlayer() {
+        mediaViewFxmlController.stopMediaView();
         if (Objects.nonNull(mediaPlayer)) {
             if (mediaPlayerIsPlaying()) {
                 mediaPlayer.stop();
             }
             mediaPlayer.dispose();
         }
-        mediaViewFxmlController.closeMediaView();
         equalizerFxmlController.setMediaPlayer(null);
     }
 
@@ -423,8 +423,19 @@ public final class KaraokeFxmlController implements Initializable {
     }
 
     public void close() {
-        closeMediaPlayer();
-        Platform.exit();
+        try {
+            shutdown();
+        } finally {
+            Platform.exit();
+        }
+    }
+
+    private void shutdown() {
+        try {
+            closeMediaPlayer();
+        } finally {
+            mediaViewFxmlController.close();
+        }
     }
 
     private void setMediaPlayer(boolean updateSingerIndex) {

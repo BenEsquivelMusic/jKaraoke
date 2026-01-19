@@ -1,13 +1,11 @@
 package karaoke.media;
 
 import javafx.scene.paint.Color;
-import karaoke.Lock;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import java.util.Objects;
-import java.util.concurrent.locks.ReentrantLock;
 
 public final class RgbColor {
 
@@ -19,26 +17,19 @@ public final class RgbColor {
     private final MemorySegment g;
     private final MemorySegment b;
 
-    private final ReentrantLock lock;
-
     public RgbColor() {
         MemorySegment parentMemorySegment = Arena.ofAuto().allocate(ValueLayout.JAVA_BYTE, NUM_BYTES * 3);
 
         this.r = parentMemorySegment.asSlice(0, NUM_BYTES * ValueLayout.JAVA_BYTE.byteSize());
         this.g = parentMemorySegment.asSlice(NUM_BYTES * ValueLayout.JAVA_BYTE.byteSize(), NUM_BYTES * ValueLayout.JAVA_BYTE.byteSize());
         this.b = parentMemorySegment.asSlice((NUM_BYTES + NUM_BYTES) * ValueLayout.JAVA_BYTE.byteSize(), NUM_BYTES * ValueLayout.JAVA_BYTE.byteSize());
-        this.lock = new ReentrantLock();
     }
 
     public void set(byte red, byte green, byte blue, int index) {
         Objects.checkIndex(index, NUM_BYTES);
-        try (Lock _ = new Lock(lock)) {
-            this.r.setAtIndex(ValueLayout.JAVA_BYTE, index, (byte) (red << NUM_BITS | red));
-            this.g.setAtIndex(ValueLayout.JAVA_BYTE, index, (byte) (green << NUM_BITS | green));
-            this.b.setAtIndex(ValueLayout.JAVA_BYTE, index, (byte) (blue << NUM_BITS | blue));
-        } catch (InterruptedException e) {
-            throw new ImageViewerException(e);
-        }
+        this.r.setAtIndex(ValueLayout.JAVA_BYTE, index, (byte) (red << NUM_BITS | red));
+        this.g.setAtIndex(ValueLayout.JAVA_BYTE, index, (byte) (green << NUM_BITS | green));
+        this.b.setAtIndex(ValueLayout.JAVA_BYTE, index, (byte) (blue << NUM_BITS | blue));
     }
 
     public int getArgb(int index) {

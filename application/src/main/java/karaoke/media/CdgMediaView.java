@@ -6,7 +6,6 @@ import java.util.Objects;
 
 public final class CdgMediaView extends ImageView {
 
-
     private ImageReader imageReader;
 
     public CdgMediaView() {
@@ -26,10 +25,9 @@ public final class CdgMediaView extends ImageView {
 
     public void stop() {
         if (Objects.nonNull(imageReader)) {
-            imageReader.stop();
+            imageReader.close();
             this.imageReader = null;
         }
     }
-
 
 }
