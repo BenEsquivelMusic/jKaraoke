@@ -28,7 +28,7 @@ public final class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        logger.info("Starting jKaraoke application...");
+        logger.info(() -> "Starting jKaraoke application...");
         try {
             URL fxmlURL = getClass().getResource("/KaraokeFxmlController.fxml");
             Objects.requireNonNull(fxmlURL);
@@ -40,11 +40,11 @@ public final class Main extends Application {
             primaryStage.setTitle("JKaraoke");
             primaryStage.setScene(scene);
             primaryStage.setOnCloseRequest(_ -> {
-                logger.info("Application closing.");
+                logger.info(() -> "Application closing.");
                 controller.close();
             });
             primaryStage.show();
-            logger.info("Application started successfully.");
+            logger.info(() -> "Application started successfully.");
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Failed to start application", e);
             throw e;
