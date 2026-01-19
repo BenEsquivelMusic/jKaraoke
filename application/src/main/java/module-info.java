@@ -4,6 +4,7 @@ module application {
     requires javafx.media;
     requires javafx.graphics;
     requires java.desktop;
+    requires java.logging;
     exports karaoke;
     opens karaoke to javafx.fxml;
     exports karaoke.media;
