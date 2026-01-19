@@ -42,6 +42,13 @@ public final class AddSongFxmlController implements Initializable {
         /* FXML controller class */
     }
 
+    private static String sanitizeForLogging(String input) {
+        if (input == null) {
+            return "";
+        }
+        return input.replace('\n', '_').replace('\r', '_').replace('\t', ' ');
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //TODO
@@ -93,10 +100,10 @@ public final class AddSongFxmlController implements Initializable {
             logger.warning(() -> "Song name cannot be blank");
             handleAlert("Song name cannot be blank");
         } else if (!setIndexedSinger()) {
-            logger.warning(() -> "Invalid Media format: " + txtSong.getText());
+            logger.warning(() -> "Invalid Media format: " + sanitizeForLogging(txtSong.getText()));
             handleAlert("Invalid Media format: " + txtSong.getText());
         } else {
-            logger.info(() -> "Song added successfully: " + txtSong.getText());
+            logger.info(() -> "Song added successfully: " + sanitizeForLogging(txtSong.getText()));
             getStage().close();
         }
         actionEvent.consume();
