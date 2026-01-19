@@ -1,4 +1,6 @@
-package karaoke;
+package karaoke.event;
+
+import karaoke.singer.Singer;
 
 import java.io.Serializable;
 

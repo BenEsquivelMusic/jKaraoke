@@ -25,7 +25,13 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import karaoke.*;
+import karaoke.Main;
+import karaoke.eq.AudioBand;
+import karaoke.event.Event;
+import karaoke.event.EventManager;
+import karaoke.singer.IndexedSinger;
+import karaoke.singer.Singer;
+import karaoke.util.ApplicationIcons;
 
 import java.io.IOException;
 import java.net.URL;

@@ -1,6 +1,6 @@
 package karaoke.media;
 
-import karaoke.Lock;
+import karaoke.util.Lock;
 
 import java.io.File;
 import java.io.IOException;

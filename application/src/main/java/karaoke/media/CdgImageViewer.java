@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import karaoke.Lock;
+import karaoke.util.Lock;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;

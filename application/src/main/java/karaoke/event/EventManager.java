@@ -1,4 +1,6 @@
-package karaoke;
+package karaoke.event;
+
+import karaoke.util.Lock;
 
 import java.io.*;
 import java.nio.file.Files;
