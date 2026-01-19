@@ -1,5 +1,6 @@
 package karaoke.controller;
 
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -48,6 +49,7 @@ public final class KaraokeFxmlController implements Initializable {
 
     private final ObservableList<IndexedSinger> indexedSingers;
     private final NumberFormat numberFormat;
+
 
     private SingerLineupFxmlController singerLineupFxmlController;
     private MediaViewFxmlController mediaViewFxmlController;
@@ -340,6 +342,91 @@ public final class KaraokeFxmlController implements Initializable {
         actionEvent.consume();
     }
 
+    public void handleNewEvent(ActionEvent actionEvent) {
+        EventFxmlController eventController = loadController(
+                EVENT_CONTROLLER,
+                ApplicationIcons.APPLICATION_ICON,
+                "Create a new event",
+                controller -> controller.setIsCreateEvent(true),
+                true);
+        if (eventController.isFormCompleted()) {
+            disableMenuItemButtons(true);
+            anchorPaneQueueButtons.setDisable(false);
+            this.eventName = eventController.getEventName();
+            this.eventManager = eventController.getEventManager();
+        }
+
+        actionEvent.consume();
+    }
+
+    public void handleOpenEvent(ActionEvent actionEvent) {
+        EventFxmlController eventController = loadController(
+                EVENT_CONTROLLER,
+                ApplicationIcons.APPLICATION_ICON,
+                "Open an existing event",
+                controller -> controller.setUnEditableEventName(""),
+                true);
+        if (eventController.isFormCompleted()) {
+            disableMenuItemButtons(true);
+            anchorPaneQueueButtons.setDisable(false);
+            this.eventManager = eventController.getEventManager();
+            Event event = eventManager.readEvent();
+            this.eventName = event.name();
+            for (Singer singer : event.singers()) {
+                indexedSingers.add(new IndexedSinger(1, singer.singerName(), singer.songFile()));
+            }
+            updateSingerIndex();
+            if (!indexedSingers.isEmpty()) {
+                buttonNextSinger.setDisable(false);
+            }
+        }
+
+        actionEvent.consume();
+    }
+
+    public void handleCloseMenu(ActionEvent actionEvent) {
+        disableMenuItemButtons(false);
+        resetMediaView();
+        indexedSingers.removeIf(_ -> true);
+        updateSingerIndex();
+        this.eventName = null;
+        this.eventManager = null;
+        anchorPaneQueueButtons.setDisable(true);
+        actionEvent.consume();
+    }
+
+    public void handleSaveEvent(ActionEvent actionEvent) {
+        saveEvent();
+        actionEvent.consume();
+    }
+
+    private void saveEvent() {
+        int singerCount = indexedSingers.size();
+        Singer[] singers = new Singer[singerCount];
+        IntStream.range(0, singerCount).forEach(singerIndex -> singers[singerIndex] = indexedSingers.get(singerIndex).getSinger());
+        eventManager.writeEvent(new Event(eventName, singers));
+    }
+
+    public void handleExitApplication(ActionEvent actionEvent) {
+        close();
+        actionEvent.consume();
+    }
+
+    public void handleSettings(ActionEvent actionEvent) {
+        //TODO
+        actionEvent.consume();
+    }
+
+    public void handleShowEqWindow(ActionEvent actionEvent) {
+        equalizerFxmlController.showEqualizer();
+        actionEvent.consume();
+    }
+
+    public void close() {
+        closeMediaPlayer();
+        Platform.exit();
+    }
+
     private void setMediaPlayer(boolean updateSingerIndex) {
         //Set up the media player
         this.mediaPlayer = new MediaPlayer(activeSinger.getMedia());
@@ -480,7 +567,6 @@ public final class KaraokeFxmlController implements Initializable {
 
     private void updateSingerIndex() {
         IntStream.range(0, indexedSingers.size())
-                .parallel()
                 .forEach(singerIndex -> {
                     IndexedSinger singer = indexedSingers.get(singerIndex);
                     int singerPriority = singerIndex + 1;
@@ -556,77 +642,4 @@ public final class KaraokeFxmlController implements Initializable {
         return 0.0;
     }
 
-    public void handleNewEvent(ActionEvent actionEvent) {
-        EventFxmlController eventController = loadController(
-                EVENT_CONTROLLER,
-                ApplicationIcons.APPLICATION_ICON,
-                "Create a new event",
-                controller -> controller.setIsCreateEvent(true),
-                true);
-        if (eventController.isFormCompleted()) {
-            disableMenuItemButtons(true);
-            anchorPaneQueueButtons.setDisable(false);
-            this.eventName = eventController.getEventName();
-            this.eventManager = eventController.getEventManager();
-        }
-
-        actionEvent.consume();
-    }
-
-    public void handleOpenEvent(ActionEvent actionEvent) {
-        EventFxmlController eventController = loadController(
-                EVENT_CONTROLLER,
-                ApplicationIcons.APPLICATION_ICON,
-                "Open an existing event",
-                controller -> controller.setUnEditableEventName(""),
-                true);
-        if (eventController.isFormCompleted()) {
-            disableMenuItemButtons(true);
-            anchorPaneQueueButtons.setDisable(false);
-            this.eventManager = eventController.getEventManager();
-            Event event = eventManager.readEvent();
-            this.eventName = event.name();
-            for (Singer singer : event.singers()) {
-                indexedSingers.add(new IndexedSinger(1, singer.singerName(), singer.songFile()));
-            }
-            updateSingerIndex();
-        }
-
-        actionEvent.consume();
-    }
-
-    public void handleCloseMenu(ActionEvent actionEvent) {
-        disableMenuItemButtons(false);
-
-        resetMediaView();
-        indexedSingers.removeIf(_ -> true);
-        updateSingerIndex();
-        this.eventName = null;
-        this.eventManager = null;
-        anchorPaneQueueButtons.setDisable(true);
-        actionEvent.consume();
-    }
-
-    public void handleSaveEvent(ActionEvent actionEvent) {
-        int singerCount = indexedSingers.size();
-        Singer[] singers = new Singer[singerCount];
-        IntStream.range(0, singerCount).forEach(singerIndex -> singers[singerIndex] = indexedSingers.get(singerIndex).getSinger());
-        eventManager.writeEvent(new Event(eventName, singers));
-        actionEvent.consume();
-    }
-
-    public void handleExitApplication(ActionEvent actionEvent) {
-        //TODO
-        actionEvent.consume();
-    }
-
-    public void handleSettings(ActionEvent actionEvent) {
-        //TODO
-        actionEvent.consume();
-    }
-
-    public void handleShowEqWindow(ActionEvent actionEvent) {
-        equalizerFxmlController.showEqualizer();
-        actionEvent.consume();
-    }
 }

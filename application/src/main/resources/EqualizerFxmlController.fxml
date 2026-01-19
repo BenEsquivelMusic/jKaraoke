@@ -65,6 +65,7 @@
         <Label text="Save as:"/>
         <TextField fx:id="customPresetName" prefWidth="150" promptText="Custom preset name"/>
         <Button fx:id="saveCustomButton" onAction="#handleSaveCustomPreset" text="Save"/>
+        <Button fx:id="loadSettingsButton" onAction="#handleLoadSettings" text="Load"/>
         <Button fx:id="deleteCustomButton" disable="true" onAction="#handleDeleteCustomPreset" text="Delete"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button onAction="#handleReset" text="Reset"/>

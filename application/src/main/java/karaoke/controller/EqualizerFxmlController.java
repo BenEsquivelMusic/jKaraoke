@@ -7,9 +7,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import karaoke.settings.EqualizerSettings;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +20,8 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 public final class EqualizerFxmlController implements Initializable {
+
+    private static final String EQS_EXTENSION = ".eqs";
 
     @FXML
     private VBox equalizerPane;
@@ -51,6 +55,8 @@ public final class EqualizerFxmlController implements Initializable {
     private Button deleteCustomButton;
     @FXML
     private CheckBox enableEqualizer;
+    @FXML
+    private Button loadSettingsButton;
 
     private List<Slider> bandSliders;
     private ObservableList<EqualizerSettings> presets;
@@ -84,6 +90,9 @@ public final class EqualizerFxmlController implements Initializable {
             presetComboBox.setDisable(!enabled);
             saveCustomButton.setDisable(!enabled);
             customPresetName.setDisable(!enabled);
+            if (loadSettingsButton != null) {
+                loadSettingsButton.setDisable(!enabled);
+            }
             if (!enabled) {
                 resetToFlat();
             }
@@ -189,6 +198,78 @@ public final class EqualizerFxmlController implements Initializable {
         if (saveCustomPresetsCallback != null) {
             saveCustomPresetsCallback.accept(new ArrayList<>(customPresets));
         }
+        
+        // Prompt user to save to file
+        saveEqualizerSettingsToFile(custom);
+    }
+
+    private void saveEqualizerSettingsToFile(EqualizerSettings settings) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Equalizer Settings");
+        fileChooser.setInitialFileName(settings.getName() + EQS_EXTENSION);
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Equalizer Settings Files", "*" + EQS_EXTENSION)
+        );
+
+        Stage stage = (Stage) equalizerPane.getScene().getWindow();
+        File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            String filePath = file.getAbsolutePath();
+            if (!filePath.endsWith(EQS_EXTENSION)) {
+                file = new File(filePath + EQS_EXTENSION);
+            }
+
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+                SerializableEqualizerSettings serializableSettings = new SerializableEqualizerSettings(
+                        settings.getName(), settings.getBandValues()
+                );
+                oos.writeObject(serializableSettings);
+                showInfo("Equalizer settings saved successfully to: " + file.getName());
+            } catch (IOException e) {
+                showAlert("Failed to save equalizer settings: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void handleLoadSettings() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load Equalizer Settings");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Equalizer Settings Files", "*" + EQS_EXTENSION)
+        );
+
+        Stage stage = (Stage) equalizerPane.getScene().getWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+                SerializableEqualizerSettings loadedSettings = (SerializableEqualizerSettings) ois.readObject();
+                EqualizerSettings settings = new EqualizerSettings(
+                        loadedSettings.name, loadedSettings.bandValues, false
+                );
+
+                // Check if preset with same name already exists
+                boolean exists = presets.stream()
+                        .anyMatch(p -> p.getName().equals(settings.getName()));
+
+                if (!exists) {
+                    customPresets.add(settings);
+                    presets.add(settings);
+                    if (saveCustomPresetsCallback != null) {
+                        saveCustomPresetsCallback.accept(new ArrayList<>(customPresets));
+                    }
+                }
+
+                // Select and apply the loaded preset
+                presetComboBox.getSelectionModel().select(settings);
+                applyPreset(settings);
+                showInfo("Equalizer settings loaded successfully: " + settings.getName());
+            } catch (IOException | ClassNotFoundException e) {
+                showAlert("Failed to load equalizer settings: " + e.getMessage());
+            }
+        }
     }
 
     @FXML
@@ -219,5 +300,23 @@ public final class EqualizerFxmlController implements Initializable {
         alert.setTitle("Warning");
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void showInfo(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private static class SerializableEqualizerSettings implements Serializable {
+        private static final long serialVersionUID = 1L;
+        final String name;
+        final double[] bandValues;
+
+        SerializableEqualizerSettings(String name, double[] bandValues) {
+            this.name = name;
+            this.bandValues = bandValues;
+        }
     }
 }
