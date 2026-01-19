@@ -91,19 +91,17 @@ public final class CdgImageViewer implements ImageViewer {
 
     @Override
     public void scroll(int hScroll, int vScroll, int color, boolean copy) {
-        // Decode horizontal scroll command and offset
+        // Decode horizontal scroll command
         // bits 5-4: command (0=none, 1=right 6px, 2=left 6px)
-        // bits 2-0: offset (0-5 pixels)
+        // Note: bits 2-0 contain offset (0-5 pixels) per CD+G spec, but fine-grained
+        // offset positioning is not implemented in this viewer
         int hCmd = (hScroll >> 4) & 0x03;
-        int hOffset = hScroll & 0x07;
-        if (hOffset > 5) hOffset = 5;
 
-        // Decode vertical scroll command and offset
+        // Decode vertical scroll command
         // bits 5-4: command (0=none, 1=down 12px, 2=up 12px)
-        // bits 3-0: offset (0-11 pixels)
+        // Note: bits 3-0 contain offset (0-11 pixels) per CD+G spec, but fine-grained
+        // offset positioning is not implemented in this viewer
         int vCmd = (vScroll >> 4) & 0x03;
-        int vOffset = vScroll & 0x0F;
-        if (vOffset > 11) vOffset = 11;
 
         // Calculate actual pixel shifts based on command
         int hShift = 0;
