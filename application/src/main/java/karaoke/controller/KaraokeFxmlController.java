@@ -423,8 +423,10 @@ public final class KaraokeFxmlController implements Initializable {
                 true);
         if (settingsController.isFormCompleted()) {
             Color selectedColor = settingsController.getSpectrumColor();
-            String hexColor = colorToHex(selectedColor);
-            barChartAudioSpectrum.setStyle("-fx-spectrum-color: " + hexColor + ";");
+            if (selectedColor != null) {
+                String hexColor = colorToHex(selectedColor);
+                barChartAudioSpectrum.setStyle("-fx-spectrum-color: " + hexColor + ";");
+            }
         }
         actionEvent.consume();
     }
