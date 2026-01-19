@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import karaoke.settings.EqualizerSettings;
+import karaoke.eq.EqualizerSettings;
 
 import java.io.*;
 import java.net.URL;

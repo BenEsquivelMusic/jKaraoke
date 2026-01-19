@@ -1,4 +1,4 @@
-package karaoke.settings;
+package karaoke.eq;
 
 import java.util.Arrays;
 import java.util.Objects;
