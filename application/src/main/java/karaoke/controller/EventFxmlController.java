@@ -98,10 +98,10 @@ public final class EventFxmlController implements Initializable {
 
     public void handleOkAction(ActionEvent actionEvent) {
         if (!txtEventName.isDisabled() && txtEventName.getText().isBlank()) {
-            logger.warning("Event name cannot be blank");
+            logger.warning(() -> "Event name cannot be blank");
             handleAlert("Event name cannot be blank");
         } else if (txtEventFile.getText().isBlank()) {
-            logger.warning("Event file cannot be blank");
+            logger.warning(() -> "Event file cannot be blank");
             handleAlert("Event file cannot be blank");
         } else {
             setEventManager();

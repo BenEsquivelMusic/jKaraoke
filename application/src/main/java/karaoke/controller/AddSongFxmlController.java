@@ -87,10 +87,10 @@ public final class AddSongFxmlController implements Initializable {
 
     public void handleOkAction(ActionEvent actionEvent) {
         if (txtSingerName.getText().isBlank()) {
-            logger.warning("Singer name cannot be blank");
+            logger.warning(() -> "Singer name cannot be blank");
             handleAlert("Singer name cannot be blank");
         } else if (txtSong.getText().isBlank()) {
-            logger.warning("Song name cannot be blank");
+            logger.warning(() -> "Song name cannot be blank");
             handleAlert("Song name cannot be blank");
         } else if (!setIndexedSinger()) {
             logger.warning(() -> "Invalid Media format: " + txtSong.getText());
