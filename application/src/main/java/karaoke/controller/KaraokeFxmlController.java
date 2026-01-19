@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -44,6 +45,7 @@ public final class KaraokeFxmlController implements Initializable {
     private static final String KARAOKE_MEDIA_VIEW_FXML_CONTROLLER = "/MediaViewFxmlController.fxml";
     private static final String EQ_FXML_CONTROLLER = "/EqualizerFxmlController.fxml";
     private static final String EVENT_CONTROLLER = "/EventFxmlController.fxml";
+    private static final String SETTINGS_FXML_CONTROLLER = "/SettingsFxmlController.fxml";
 
     private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
 
@@ -413,7 +415,19 @@ public final class KaraokeFxmlController implements Initializable {
     }
 
     public void handleSettings(ActionEvent actionEvent) {
-        //TODO
+        SettingsFxmlController settingsController = loadController(
+                SETTINGS_FXML_CONTROLLER,
+                ApplicationIcons.APPLICATION_ICON,
+                "Settings",
+                null,
+                true);
+        if (settingsController.isFormCompleted()) {
+            Color selectedColor = settingsController.getSpectrumColor();
+            if (selectedColor != null) {
+                String hexColor = colorToHex(selectedColor);
+                barChartAudioSpectrum.setStyle("-fx-spectrum-color: " + hexColor + ";");
+            }
+        }
         actionEvent.consume();
     }
 
@@ -651,6 +665,13 @@ public final class KaraokeFxmlController implements Initializable {
             return value / max;
         }
         return 0.0;
+    }
+
+    private String colorToHex(Color color) {
+        int red = (int) Math.round(color.getRed() * 255);
+        int green = (int) Math.round(color.getGreen() * 255);
+        int blue = (int) Math.round(color.getBlue() * 255);
+        return String.format("#%02X%02X%02X", red, green, blue);
     }
 
 }
