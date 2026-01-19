@@ -105,7 +105,7 @@ public final class EventFxmlController implements Initializable {
             handleAlert("Event file cannot be blank");
         } else {
             setEventManager();
-            logger.info("Event manager configured for: " + txtEventName.getText());
+            logger.info(() -> "Event manager configured for: " + txtEventName.getText());
             getStage().close();
         }
         actionEvent.consume();

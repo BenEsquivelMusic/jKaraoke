@@ -93,10 +93,10 @@ public final class AddSongFxmlController implements Initializable {
             logger.warning("Song name cannot be blank");
             handleAlert("Song name cannot be blank");
         } else if (!setIndexedSinger()) {
-            logger.warning("Invalid Media format: " + txtSong.getText());
+            logger.warning(() -> "Invalid Media format: " + txtSong.getText());
             handleAlert("Invalid Media format: " + txtSong.getText());
         } else {
-            logger.info("Song added successfully: " + txtSong.getText());
+            logger.info(() -> "Song added successfully: " + txtSong.getText());
             getStage().close();
         }
         actionEvent.consume();
