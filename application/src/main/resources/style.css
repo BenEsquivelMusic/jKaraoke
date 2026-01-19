@@ -10,6 +10,7 @@
     -fx-background-color: #2D2D30;
     -fx-border-color: #2D2D30;
     background-color: #2D2D30;
+    -fx-spectrum-color: blue;
 }
 
 .split-pane:horizontal > .split-pane-divider {
@@ -25,43 +26,43 @@
 }
 
 .data0.chart-bar {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-spectrum-color;
 }
 
 .data1.chart-bar {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-spectrum-color;
 }
 
 .data2.chart-bar {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-spectrum-color;
 }
 
 .data3.chart-bar {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-spectrum-color;
 }
 
 .data4.chart-bar {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-spectrum-color;
 }
 
 .data5.chart-bar {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-spectrum-color;
 }
 
 .data6.chart-bar {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-spectrum-color;
 }
 
 .data7.chart-bar {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-spectrum-color;
 }
 
 .data8.chart-bar {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-spectrum-color;
 }
 
 .data9.chart-bar {
-    -fx-background-color: blue;
+    -fx-background-color: -fx-spectrum-color;
 }
 
 /* Label */
