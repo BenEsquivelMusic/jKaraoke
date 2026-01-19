@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -110,6 +111,9 @@ public final class KaraokeFxmlController implements Initializable {
     private Label labelQueue;
 
     @FXML
+    private Label labelRemainingTime;
+
+    @FXML
     private Label labelStatus;
 
     @FXML
@@ -204,6 +208,7 @@ public final class KaraokeFxmlController implements Initializable {
         });
         disableMenuItemButtons(false);
         anchorPaneQueueButtons.setDisable(true);
+        setupSliderTooltip();
     }
 
     public void handleMoveSingerForward(ActionEvent actionEvent) {
@@ -456,11 +461,7 @@ public final class KaraokeFxmlController implements Initializable {
         //Set up the media player
         this.mediaPlayer = new MediaPlayer(activeSinger.getMedia());
         mediaPlayer.totalDurationProperty().addListener((_, _, newValue) -> {
-            double totalSecs = newValue.toSeconds();
-            double hours = totalSecs / 3600;
-            double minutes = (totalSecs % 3600) / 60;
-            double seconds = totalSecs % 60;
-            labelTime.setText(numberFormat.format(hours) + ':' + numberFormat.format(minutes) + ':' + numberFormat.format(seconds));
+            labelTime.setText(formatDuration(newValue));
         });
         labelSong.setText(activeSinger.getSongFile());
         mediaPlayer.setAudioSpectrumNumBands(10);
@@ -473,6 +474,12 @@ public final class KaraokeFxmlController implements Initializable {
             } else {
                 double totalTime = mediaPlayer.getTotalDuration().toMillis();
                 sliderTrack.setValue(Math.min((currentTime * 100.0) / totalTime, 100.0));
+            }
+
+            Duration total = mediaPlayer.getTotalDuration();
+            if (total != null && !total.isUnknown() && !total.isIndefinite()) {
+                Duration remaining = total.subtract(newValue);
+                labelRemainingTime.setText("-" + formatDuration(remaining));
             }
         });
         mediaPlayer.setAudioSpectrumListener((_, _, magnitudes, phases) -> {
@@ -578,6 +585,7 @@ public final class KaraokeFxmlController implements Initializable {
         buttonChangeSinger.setDisable(true);
         buttonNextSinger.setDisable(indexedSingers.isEmpty());
         labelTime.setText("");
+        labelRemainingTime.setText("");
         labelSong.setText("");
         labelStatus.setText("");
     }
@@ -613,6 +621,48 @@ public final class KaraokeFxmlController implements Initializable {
                             "-default-track-color 100%%);",
                     percentage);
             slider.setStyle(style);
+        });
+    }
+
+    private String formatDuration(Duration duration) {
+        double totalSecs = duration.toSeconds();
+        double hours = totalSecs / 3600;
+        double minutes = (totalSecs % 3600) / 60;
+        double seconds = totalSecs % 60;
+        return numberFormat.format(hours) + ':' + numberFormat.format(minutes) + ':' + numberFormat.format(seconds);
+    }
+
+    private void setupSliderTooltip() {
+        sliderTrack.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+            if (newSkin != null) {
+                Platform.runLater(() -> {
+                    Node thumb = sliderTrack.lookup(".thumb");
+                    if (thumb != null) {
+                        Tooltip tooltip = new Tooltip();
+                        Tooltip.install(thumb, tooltip);
+                        
+                        sliderTrack.valueProperty().addListener((o, oldVal, newVal) -> {
+                             if (mediaPlayer != null) {
+                                 double totalMillis = mediaPlayer.getTotalDuration().toMillis();
+                                 if (totalMillis > 0) {
+                                     double currentMillis = (newVal.doubleValue() / 100.0) * totalMillis;
+                                     tooltip.setText(formatDuration(Duration.millis(currentMillis)));
+                                 }
+                             }
+                        });
+                        
+                        thumb.setOnMouseEntered(e -> {
+                            if (mediaPlayer != null) {
+                                double totalMillis = mediaPlayer.getTotalDuration().toMillis();
+                                if (totalMillis > 0) {
+                                     double currentMillis = (sliderTrack.getValue() / 100.0) * totalMillis;
+                                     tooltip.setText(formatDuration(Duration.millis(currentMillis)));
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         });
     }
 
