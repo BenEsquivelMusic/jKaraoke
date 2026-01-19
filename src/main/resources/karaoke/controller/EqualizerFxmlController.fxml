@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:id="equalizerPane" spacing="10" stylesheets="@style.css"
+      xmlns="http://javafx.com/javafx/23.0.1" fx:controller="karaoke.controller.EqualizerFxmlController">
+    <padding>
+        <Insets bottom="15" left="15" right="15" top="15"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <CheckBox fx:id="enableEqualizer" selected="true" text="Enable Equalizer"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Preset:"/>
+        <ComboBox fx:id="presetComboBox" prefWidth="150"/>
+    </HBox>
+
+    <HBox alignment="CENTER" spacing="5">
+        <VBox alignment="CENTER" spacing="2" prefWidth="40">
+            <Label text="60Hz" prefWidth="40" alignment="CENTER"/>
+            <Slider fx:id="slider60Hz" orientation="VERTICAL" prefHeight="150"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="2" prefWidth="40">
+            <Label text="170Hz" prefWidth="40" alignment="CENTER"/>
+            <Slider fx:id="slider170Hz" orientation="VERTICAL" prefHeight="150"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="2" prefWidth="40">
+            <Label text="310Hz" prefWidth="40" alignment="CENTER"/>
+            <Slider fx:id="slider310Hz" orientation="VERTICAL" prefHeight="150"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="2" prefWidth="40">
+            <Label text="600Hz" prefWidth="40" alignment="CENTER"/>
+            <Slider fx:id="slider600Hz" orientation="VERTICAL" prefHeight="150"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="2" prefWidth="40">
+            <Label text="1kHz" prefWidth="40" alignment="CENTER"/>
+            <Slider fx:id="slider1kHz" orientation="VERTICAL" prefHeight="150"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="2" prefWidth="40">
+            <Label text="3kHz" prefWidth="40" alignment="CENTER"/>
+            <Slider fx:id="slider3kHz" orientation="VERTICAL" prefHeight="150"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="2" prefWidth="40">
+            <Label text="6kHz" prefWidth="40" alignment="CENTER"/>
+            <Slider fx:id="slider6kHz" orientation="VERTICAL" prefHeight="150"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="2" prefWidth="40">
+            <Label text="12kHz" prefWidth="40" alignment="CENTER"/>
+            <Slider fx:id="slider12kHz" orientation="VERTICAL" prefHeight="150"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="2" prefWidth="40">
+            <Label text="14kHz" prefWidth="40" alignment="CENTER"/>
+            <Slider fx:id="slider14kHz" orientation="VERTICAL" prefHeight="150"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="2" prefWidth="40">
+            <Label text="16kHz" prefWidth="40" alignment="CENTER"/>
+            <Slider fx:id="slider16kHz" orientation="VERTICAL" prefHeight="150"/>
+        </VBox>
+    </HBox>
+
+    <Separator/>
+
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Save as:"/>
+        <TextField fx:id="customPresetName" prefWidth="150" promptText="Custom preset name"/>
+        <Button fx:id="saveCustomButton" onAction="#handleSaveCustomPreset" text="Save"/>
+        <Button fx:id="loadSettingsButton" onAction="#handleLoadSettings" text="Load"/>
+        <Button fx:id="deleteCustomButton" onAction="#handleDeleteCustomPreset" text="Delete"/>
+        <Button onAction="#handleReset" text="Reset"/>
+    </HBox>
+</VBox>
