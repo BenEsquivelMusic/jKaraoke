@@ -15,7 +15,7 @@ public sealed interface ImageViewer permits CdgImageViewer {
     void draw();
 
     void scroll(int hScroll, int vScroll, int color, boolean copy);
-    
+
     void setTransparentColor(int colorIndex);
 
 }

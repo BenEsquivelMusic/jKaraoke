@@ -11,7 +11,7 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 
-
+/* See https://jbum.com/cdg_revealed.html for detailed specifications on CD+G format */
 public final class CdgImageViewer implements ImageViewer {
 
     private static final int CDG_WIDTH = 300;
