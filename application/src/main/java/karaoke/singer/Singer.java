@@ -1,4 +1,4 @@
-package karaoke;
+package karaoke.singer;
 
 import java.io.Serializable;
 

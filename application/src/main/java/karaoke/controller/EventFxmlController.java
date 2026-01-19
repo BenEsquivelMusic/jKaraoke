@@ -11,7 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import karaoke.EventManager;
+import karaoke.event.EventManager;
 
 import java.io.File;
 import java.net.URL;

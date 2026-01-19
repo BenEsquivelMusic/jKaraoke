@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import karaoke.controller.KaraokeFxmlController;
+import karaoke.util.ApplicationIcons;
 
 import java.net.URL;
 import java.util.Objects;

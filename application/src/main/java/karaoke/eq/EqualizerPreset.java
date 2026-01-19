@@ -1,4 +1,4 @@
-package karaoke;
+package karaoke.eq;
 
 import java.io.Serializable;
 import java.util.Arrays;
