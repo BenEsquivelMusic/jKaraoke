@@ -28,13 +28,6 @@ public final class EqualizerSettings {
         return Arrays.copyOf(bandValues, BAND_COUNT);
     }
 
-    public double getBandValue(int bandIndex) {
-        if (bandIndex < 0 || bandIndex >= BAND_COUNT) {
-            throw new IndexOutOfBoundsException("Band index must be between 0 and " + (BAND_COUNT - 1));
-        }
-        return bandValues[bandIndex];
-    }
-
     public boolean isPreset() {
         return isPreset;
     }

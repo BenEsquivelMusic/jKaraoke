@@ -1,6 +1,8 @@
 package karaoke.media;
 
-public sealed interface ImageReader permits CdgImageReader {
+import java.io.Closeable;
+
+public sealed interface ImageReader extends Closeable permits CdgImageReader {
 
     void initialize();
 
@@ -8,7 +10,7 @@ public sealed interface ImageReader permits CdgImageReader {
 
     void pause();
 
-    void stop();
+    void close();
 
     void seek(double percent);
 

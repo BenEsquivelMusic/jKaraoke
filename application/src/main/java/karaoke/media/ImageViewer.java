@@ -1,6 +1,8 @@
 package karaoke.media;
 
-public sealed interface ImageViewer permits CdgImageViewer {
+import java.io.Closeable;
+
+public sealed interface ImageViewer extends Closeable permits CdgImageViewer {
 
     void setColor(byte r, byte g, byte b, int index);
 
@@ -17,5 +19,7 @@ public sealed interface ImageViewer permits CdgImageViewer {
     void scroll(int hScroll, int vScroll, int color, boolean copy);
 
     void setTransparentColor(int colorIndex);
+
+    void close();
 
 }

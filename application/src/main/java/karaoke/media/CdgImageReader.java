@@ -68,7 +68,7 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
     }
 
     @Override
-    public void stop() {
+    public void close() {
         timer.cancel();
         try (Lock _ = new Lock(lock)) {
             dis.close();
@@ -190,17 +190,6 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
         }
     }
 
-    /**
-     * Handle CDG_SCROLL_PRESET and CDG_SCROLL_COPY instructions.
-     * Based on CD+G specification from jbum.com/cdg_revealed.html
-     * 
-     * Packet layout:
-     * - packet[4]: color (lower 4 bits) - fill color for scroll preset
-     * - packet[5]: hScroll - bits 5-4: command (0=none, 1=right 6px, 2=left 6px), bits 2-0: offset (0-5)
-     * - packet[6]: vScroll - bits 5-4: command (0=none, 1=down 12px, 2=up 12px), bits 3-0: offset (0-11)
-     * 
-     * @param copy if true, perform scroll copy (wrap around); if false, perform scroll preset (fill with color)
-     */
     private void cdgScroll(boolean copy) {
         int color = packet[4] & 0x0F;
         int hScroll = packet[5] & SC_MASK;
@@ -208,13 +197,6 @@ public final class CdgImageReader extends TimerTask implements ImageReader {
         viewer.scroll(hScroll, vScroll, color, copy);
     }
 
-    /**
-     * Handle CDG_TRANSPARENT_COLOR instruction.
-     * Sets which palette index should be treated as transparent.
-     * 
-     * Packet layout:
-     * - packet[4]: color index (lower 4 bits) to be transparent
-     */
     private void cdgTransparentColor() {
         int colorIndex = packet[4] & 0x0F;
         viewer.setTransparentColor(colorIndex);
