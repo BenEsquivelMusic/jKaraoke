@@ -6,10 +6,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import karaoke.Lock;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
+import java.util.concurrent.locks.ReentrantLock;
 
 /* See https://jbum.com/cdg_revealed.html for detailed specifications on CD+G format */
 public final class CdgImageViewer implements ImageViewer {
@@ -21,8 +23,11 @@ public final class CdgImageViewer implements ImageViewer {
     private final Canvas backgroundCanvas;
     private final ImageView imageView;
     private final RgbColor rgbColor;
+    private final Arena offHeapArena;
     private final MemorySegment pixelIndices;
     private final WritableImage writableImage;
+
+    private final ReentrantLock lock;
 
     // Transparent color index (-1 means no transparency)
     private int transparentColorIndex = -1;
@@ -31,23 +36,29 @@ public final class CdgImageViewer implements ImageViewer {
         this.backgroundCanvas = backgroundCanvas;
         this.imageView = imageView;
         this.rgbColor = new RgbColor();
-        this.pixelIndices = Arena.ofAuto().allocate(ValueLayout.JAVA_INT, NUM_PIXELS);
+        this.offHeapArena = Arena.ofShared();
+        this.pixelIndices = offHeapArena.allocate(ValueLayout.JAVA_INT, NUM_PIXELS);
         this.writableImage = new WritableImage(CDG_WIDTH, CDG_HEIGHT);
+        this.lock = new ReentrantLock();
         draw();
     }
 
     @Override
     public void setColor(byte r, byte g, byte b, int index) {
-        rgbColor.set(r, g, b, index);
+        try (Lock _ = new Lock(lock)) {
+            rgbColor.set(r, g, b, index);
+        } catch (Exception e) {
+            throw new ImageViewerException(e);
+        }
     }
 
     @Override
     public void setPixel(int x, int y, int color, boolean xor) {
-        int index = y * CDG_WIDTH + x;
-        if (xor) {
-            color ^= pixelIndices.getAtIndex(ValueLayout.JAVA_INT, index);
+        try (Lock _ = new Lock(lock)) {
+            setPixel(color, y * CDG_WIDTH + x, xor);
+        } catch (Exception e) {
+            throw new ImageViewerException(e);
         }
-        pixelIndices.setAtIndex(ValueLayout.JAVA_INT, index, color);
     }
 
     @Override
@@ -57,35 +68,19 @@ public final class CdgImageViewer implements ImageViewer {
 
     @Override
     public void clearBorder(int col) {
-        Platform.runLater(() -> backgroundCanvas.getGraphicsContext2D().setFill(rgbColor.createColor(col)));
-        int pos = 0;
-        for (int y = 0; y < 6; y++) {
-            for (int x = 0; x < CDG_WIDTH; x++) {
-                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
-            }
-        }
-        for (int y = 6; y < 210; y++) {
-            for (int x = 0; x < 3; x++) {
-                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
-            }
-            pos += 294;
-            for (int x = 297; x < CDG_WIDTH; x++) {
-                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
-            }
-        }
-        for (int y = 0; y < 6; y++) {
-            for (int x = 0; x < CDG_WIDTH; x++) {
-                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
-            }
+        try (Lock _ = new Lock(lock)) {
+            clearBorderWithColor(col);
+        } catch (Exception e) {
+            throw new ImageViewerException(e);
         }
     }
 
     @Override
     public void clearScreen(int col) {
-        for (int y = 6; y < 210; y++) {
-            for (int x = 3; x < 297; x++) {
-                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, y * CDG_WIDTH + x, col);
-            }
+        try (Lock _ = new Lock(lock)) {
+            clearScreenWithColor(col);
+        } catch (Exception e) {
+            throw new ImageViewerException(e);
         }
     }
 
@@ -123,6 +118,82 @@ public final class CdgImageViewer implements ImageViewer {
             return;
         }
 
+        try (Lock _ = new Lock(lock)) {
+            scroll(color, copy, hShift, vShift);
+        } catch (InterruptedException e) {
+            throw new ImageViewerException(e);
+        }
+    }
+
+    @Override
+    public void setTransparentColor(int colorIndex) {
+        try (Lock _ = new Lock(lock)) {
+            this.transparentColorIndex = colorIndex;
+        } catch (Exception e) {
+            throw new ImageViewerException(e);
+        }
+    }
+
+    @Override
+    public void draw() {
+        try (Lock _ = new Lock(lock)) {
+            drawAndRender();
+        } catch (Exception e) {
+            throw new ImageViewerException(e);
+        }
+    }
+
+    @Override
+    public void close() {
+        try (Lock _ = new Lock(lock)) {
+            if (offHeapArena.scope().isAlive()) {
+                offHeapArena.close();
+            }
+        } catch (Exception e) {
+            throw new ImageViewerException(e);
+        }
+    }
+
+    private void setPixel(int color, int index, boolean xor) {
+        if (xor) {
+            color ^= pixelIndices.getAtIndex(ValueLayout.JAVA_INT, index);
+        }
+        pixelIndices.setAtIndex(ValueLayout.JAVA_INT, index, color);
+    }
+
+    private void clearBorderWithColor(int col) {
+        Platform.runLater(() -> backgroundCanvas.getGraphicsContext2D().setFill(rgbColor.createColor(col)));
+        int pos = 0;
+        for (int y = 0; y < 6; y++) {
+            for (int x = 0; x < CDG_WIDTH; x++) {
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
+            }
+        }
+        for (int y = 6; y < 210; y++) {
+            for (int x = 0; x < 3; x++) {
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
+            }
+            pos += 294;
+            for (int x = 297; x < CDG_WIDTH; x++) {
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
+            }
+        }
+        for (int y = 0; y < 6; y++) {
+            for (int x = 0; x < CDG_WIDTH; x++) {
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, pos++, col);
+            }
+        }
+    }
+
+    private void clearScreenWithColor(int col) {
+        for (int y = 6; y < 210; y++) {
+            for (int x = 3; x < 297; x++) {
+                pixelIndices.setAtIndex(ValueLayout.JAVA_INT, y * CDG_WIDTH + x, col);
+            }
+        }
+    }
+
+    private void scroll(int color, boolean copy, int hShift, int vShift) {
         // Create a temporary buffer for the scrolled pixels
         int[] tempBuffer = new int[NUM_PIXELS];
 
@@ -155,13 +226,7 @@ public final class CdgImageViewer implements ImageViewer {
         }
     }
 
-    @Override
-    public void setTransparentColor(int colorIndex) {
-        this.transparentColorIndex = colorIndex;
-    }
-
-    @Override
-    public void draw() {
+    private void drawAndRender() {
         int[] argbPixels = new int[NUM_PIXELS];
         for (int i = 0; i < NUM_PIXELS; i++) {
             int colorIndex = pixelIndices.getAtIndex(ValueLayout.JAVA_INT, i);

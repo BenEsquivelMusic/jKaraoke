@@ -9,6 +9,7 @@ import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import karaoke.media.*;
 
+import java.io.Closeable;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -16,7 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public final class MediaViewFxmlController implements Initializable {
+public final class MediaViewFxmlController implements Initializable, Closeable {
 
     @FXML
     private Pane mediaViewPane;
@@ -45,7 +46,7 @@ public final class MediaViewFxmlController implements Initializable {
         getOptionalImageReader(mediaPlayer).ifPresentOrElse(imageReader -> {
                     mediaPlayer.setOnPlaying(imageReader::play);
                     mediaPlayer.setOnEndOfMedia(imageReader::pause);
-                    mediaPlayer.setOnError(imageReader::stop);
+                    mediaPlayer.setOnError(imageReader::close);
                     mediaPlayer.setOnPaused(imageReader::pause);
                     mediaPlayer.setOnStalled(imageReader::pause);
                     mediaPlayer.setOnStopped(() -> {
@@ -74,12 +75,17 @@ public final class MediaViewFxmlController implements Initializable {
         stage.show();
     }
 
-    public void closeMediaView() {
+    public void stopMediaView() {
         cdgMediaView.stop();
     }
 
     public void seek(double percent) {
         cdgMediaView.seek(percent);
+    }
+
+    @Override
+    public void close() {
+        imageViewer.close();
     }
 
     private Optional<ImageReader> getOptionalImageReader(MediaPlayer mediaPlayer) {
