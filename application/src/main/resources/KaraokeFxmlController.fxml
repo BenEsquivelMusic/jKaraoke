@@ -384,6 +384,14 @@
                 </textFill>
             </Label>
             <Pane HBox.hgrow="ALWAYS"/>
+            <Label fx:id="labelRemainingTime" maxHeight="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+                <font>
+                    <Font size="11.0"/>
+                </font>
+                <textFill>
+                    <Color red="0.625" green="0.625" blue="0.625"/>
+                </textFill>
+            </Label>
         </HBox>
     </VBox>
 </AnchorPane>
