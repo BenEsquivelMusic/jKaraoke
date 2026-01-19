@@ -17,8 +17,12 @@ import java.io.File;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class AddSongFxmlController implements Initializable {
+
+    private static final Logger logger = Logger.getLogger(AddSongFxmlController.class.getName());
 
     @FXML
     private Button buttonBrowseFile;
@@ -83,12 +87,16 @@ public final class AddSongFxmlController implements Initializable {
 
     public void handleOkAction(ActionEvent actionEvent) {
         if (txtSingerName.getText().isBlank()) {
+            logger.warning("Singer name cannot be blank");
             handleAlert("Singer name cannot be blank");
         } else if (txtSong.getText().isBlank()) {
+            logger.warning("Song name cannot be blank");
             handleAlert("Song name cannot be blank");
         } else if (!setIndexedSinger()) {
+            logger.warning("Invalid Media format: " + txtSong.getText());
             handleAlert("Invalid Media format: " + txtSong.getText());
         } else {
+            logger.info("Song added successfully: " + txtSong.getText());
             getStage().close();
         }
         actionEvent.consume();
@@ -107,6 +115,7 @@ public final class AddSongFxmlController implements Initializable {
         try {
             this.singer = new IndexedSinger(0, txtSingerName.getText(), txtSong.getText());
         } catch (IllegalArgumentException | UnsupportedOperationException | MediaException e) {
+            logger.log(Level.SEVERE, "Error creating IndexedSinger", e);
             return false;
         }
         return true;
