@@ -17,8 +17,11 @@ import java.io.File;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public final class EventFxmlController implements Initializable {
+
+    private static final Logger logger = Logger.getLogger(EventFxmlController.class.getName());
 
     @FXML
     private Label labelSaveFile;
@@ -37,6 +40,13 @@ public final class EventFxmlController implements Initializable {
 
     public EventFxmlController() {
         /* FXML controller class */
+    }
+
+    private static String sanitizeForLogging(String input) {
+        if (input == null) {
+            return "";
+        }
+        return input.replace('\n', '_').replace('\r', '_').replace('\t', ' ');
     }
 
     @Override
@@ -68,6 +78,7 @@ public final class EventFxmlController implements Initializable {
             File selectedFolder = directoryChooser.showDialog(getStage());
             if (Objects.nonNull(selectedFolder)) {
                 txtEventFile.setText(selectedFolder.getAbsolutePath());
+                logger.info(() -> "Selected folder: " + sanitizeForLogging(selectedFolder.getAbsolutePath()));
             }
         } else {
             FileChooser fileChooser = new FileChooser();
@@ -75,6 +86,7 @@ public final class EventFxmlController implements Initializable {
             File selectedFile = fileChooser.showOpenDialog(getStage());
             if (Objects.nonNull(selectedFile)) {
                 txtEventFile.setText(selectedFile.getAbsolutePath());
+                logger.info(() -> "Selected file: " + sanitizeForLogging(selectedFile.getAbsolutePath()));
             }
         }
 
@@ -93,11 +105,14 @@ public final class EventFxmlController implements Initializable {
 
     public void handleOkAction(ActionEvent actionEvent) {
         if (!txtEventName.isDisabled() && txtEventName.getText().isBlank()) {
+            logger.warning(() -> "Event name cannot be blank");
             handleAlert("Event name cannot be blank");
         } else if (txtEventFile.getText().isBlank()) {
+            logger.warning(() -> "Event file cannot be blank");
             handleAlert("Event file cannot be blank");
         } else {
             setEventManager();
+            logger.info(() -> "Event manager configured for: " + sanitizeForLogging(txtEventName.getText()));
             getStage().close();
         }
         actionEvent.consume();

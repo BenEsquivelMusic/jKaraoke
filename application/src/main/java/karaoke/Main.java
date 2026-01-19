@@ -11,8 +11,12 @@ import karaoke.controller.KaraokeFxmlController;
 import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class Main extends Application {
+
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     public Main() {
         /* Main application class  */
@@ -24,17 +28,27 @@ public final class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        URL fxmlURL = getClass().getResource("/KaraokeFxmlController.fxml");
-        Objects.requireNonNull(fxmlURL);
-        FXMLLoader loader = new FXMLLoader(fxmlURL);
-        Parent root = loader.load();
-        KaraokeFxmlController controller = loader.getController();
-        Scene scene = new Scene(root);
-        primaryStage.getIcons().add(new Image(Optional.ofNullable(Main.class.getResourceAsStream(ApplicationIcons.APPLICATION_ICON)).orElseThrow()));
-        primaryStage.setTitle("JKaraoke");
-        primaryStage.setScene(scene);
-        primaryStage.setOnCloseRequest(_ -> controller.close());
-        primaryStage.show();
+        logger.info(() -> "Starting jKaraoke application...");
+        try {
+            URL fxmlURL = getClass().getResource("/KaraokeFxmlController.fxml");
+            Objects.requireNonNull(fxmlURL);
+            FXMLLoader loader = new FXMLLoader(fxmlURL);
+            Parent root = loader.load();
+            KaraokeFxmlController controller = loader.getController();
+            Scene scene = new Scene(root);
+            primaryStage.getIcons().add(new Image(Optional.ofNullable(Main.class.getResourceAsStream(ApplicationIcons.APPLICATION_ICON)).orElseThrow()));
+            primaryStage.setTitle("JKaraoke");
+            primaryStage.setScene(scene);
+            primaryStage.setOnCloseRequest(_ -> {
+                logger.info(() -> "Application closing.");
+                controller.close();
+            });
+            primaryStage.show();
+            logger.info(() -> "Application started successfully.");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed to start application", e);
+            throw e;
+        }
     }
 
 }
