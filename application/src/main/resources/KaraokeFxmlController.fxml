@@ -369,6 +369,7 @@
                         </TitledPane>
                     </AnchorPane>
                 </SplitPane>
+            </AnchorPane>
         </SplitPane>
         <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
             <padding>
@@ -383,7 +384,7 @@
                 </textFill>
             </Label>
             <Pane HBox.hgrow="ALWAYS"/>
-            <Label fx:id="labelRemainingTime" maxHeight="1.7976931348623157E308" text="" HBox.hgrow="ALWAYS">
+            <Label fx:id="labelRemainingTime" maxHeight="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                 <font>
                     <Font size="11.0"/>
                 </font>
