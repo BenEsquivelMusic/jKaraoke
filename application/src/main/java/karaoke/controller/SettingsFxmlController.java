@@ -68,7 +68,9 @@ public final class SettingsFxmlController implements Initializable {
     }
 
     public void setSpectrumColor(Color color) {
-        colorPickerSpectrum.setValue(color);
+        if (color != null) {
+            colorPickerSpectrum.setValue(color);
+        }
     }
 
     public boolean isAutoSaveEnabled() {
@@ -77,5 +79,6 @@ public final class SettingsFxmlController implements Initializable {
 
     public void setAutoSaveEnabled(boolean enabled) {
         toggleAutoSave.setSelected(enabled);
+        updateToggleButtonText();
     }
 }
