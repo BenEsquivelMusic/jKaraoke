@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -12,6 +13,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public final class SettingsFxmlController implements Initializable {
+
+    @FXML
+    private VBox vBoxPane;
 
     @FXML
     private ColorPicker colorPickerSpectrum;
@@ -35,7 +39,12 @@ public final class SettingsFxmlController implements Initializable {
         updateToggleButtonText();
 
         // Add listener to update toggle button text when state changes
-        toggleAutoSave.selectedProperty().addListener((observable, oldValue, newValue) -> updateToggleButtonText());
+        toggleAutoSave.selectedProperty().addListener((_, _, _) -> updateToggleButtonText());
+    }
+
+    public void show() {
+        Stage stage = (Stage) vBoxPane.getScene().getWindow();
+        stage.showAndWait();
     }
 
     @FXML

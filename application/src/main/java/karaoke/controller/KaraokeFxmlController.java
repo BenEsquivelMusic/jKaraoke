@@ -59,10 +59,10 @@ public final class KaraokeFxmlController implements Initializable {
     private final ObservableList<IndexedSinger> indexedSingers;
     private final NumberFormat numberFormat;
 
-
     private SingerLineupFxmlController singerLineupFxmlController;
     private MediaViewFxmlController mediaViewFxmlController;
     private EqualizerFxmlController equalizerFxmlController;
+    private SettingsFxmlController settingsController;
 
     private IndexedSinger activeSinger;
     private MediaPlayer mediaPlayer;
@@ -194,6 +194,7 @@ public final class KaraokeFxmlController implements Initializable {
         this.singerLineupFxmlController = loadController(SINGER_LINEUP_FXML_CONTROLLER, ApplicationIcons.MONITOR_ICON, "Karaoke Singer Lineup", controller -> controller.setSingers(indexedSingers), false);
         this.mediaViewFxmlController = loadController(KARAOKE_MEDIA_VIEW_FXML_CONTROLLER, ApplicationIcons.MONITOR_ICON, "Karaoke Media View", null, false);
         this.equalizerFxmlController = loadController(EQ_FXML_CONTROLLER, ApplicationIcons.APPLICATION_ICON, "Equalizer", null, false);
+        this.settingsController = loadController(SETTINGS_FXML_CONTROLLER, ApplicationIcons.APPLICATION_ICON, "Settings", null, false);
         ObservableList<String> phaseCategories = FXCollections.observableList(new ArrayList<>(10));
         IntStream.rangeClosed(1, 10).forEach(phase -> phaseCategories.add(new AudioBand(phase).toString()));
         categoryAxisPhase.setCategories(phaseCategories);
@@ -229,6 +230,7 @@ public final class KaraokeFxmlController implements Initializable {
                 }
             });
             updateSingerIndex();
+            checkAutoSave();
         }
         actionEvent.consume();
     }
@@ -242,6 +244,7 @@ public final class KaraokeFxmlController implements Initializable {
             if (buttonNextSinger.isDisable() && !indexedSingers.isEmpty() && Objects.isNull(activeSinger)) {
                 buttonNextSinger.setDisable(false);
             }
+            checkAutoSave();
         }
         actionEvent.consume();
     }
@@ -254,6 +257,7 @@ public final class KaraokeFxmlController implements Initializable {
             if (indexedSingers.isEmpty()) {
                 buttonNextSinger.setDisable(true);
             }
+            checkAutoSave();
         }
         actionEvent.consume();
     }
@@ -269,6 +273,7 @@ public final class KaraokeFxmlController implements Initializable {
                 }
             });
             updateSingerIndex();
+            checkAutoSave();
         }
         actionEvent.consume();
     }
@@ -330,6 +335,7 @@ public final class KaraokeFxmlController implements Initializable {
         indexedSingers.add(activeSinger.copy());
         resetMediaView();
         updateSingerIndex();
+        checkAutoSave();
         actionEvent.consume();
     }
 
@@ -342,6 +348,7 @@ public final class KaraokeFxmlController implements Initializable {
         buttonNextSinger.setDisable(true);
         this.activeSinger = indexedSingers.removeFirst();
         setMediaPlayer(true);
+        checkAutoSave();
         actionEvent.consume();
     }
 
@@ -426,12 +433,7 @@ public final class KaraokeFxmlController implements Initializable {
     }
 
     public void handleSettings(ActionEvent actionEvent) {
-        SettingsFxmlController settingsController = loadController(
-                SETTINGS_FXML_CONTROLLER,
-                ApplicationIcons.APPLICATION_ICON,
-                "Settings",
-                null,
-                true);
+        settingsController.show();
         if (settingsController.isFormCompleted()) {
             Color selectedColor = settingsController.getSpectrumColor();
             if (selectedColor != null) {
@@ -452,6 +454,12 @@ public final class KaraokeFxmlController implements Initializable {
             shutdown();
         } finally {
             Platform.exit();
+        }
+    }
+
+    private void checkAutoSave() {
+        if (settingsController.isAutoSaveEnabled()) {
+            saveEvent();
         }
     }
 
