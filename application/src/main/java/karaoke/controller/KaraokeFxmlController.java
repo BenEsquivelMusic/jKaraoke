@@ -19,7 +19,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -161,7 +161,7 @@ public final class KaraokeFxmlController implements Initializable {
     private NumberAxis numberAxisBarMagnitude;
 
     @FXML
-    private AnchorPane anchorPaneQueueButtons;
+    private HBox hBoxQueueButtons;
 
     public KaraokeFxmlController() {
         this.indexedSingers = FXCollections.observableArrayList();
@@ -213,7 +213,7 @@ public final class KaraokeFxmlController implements Initializable {
             }
         });
         disableMenuItemButtons(false);
-        anchorPaneQueueButtons.setDisable(true);
+        hBoxQueueButtons.setDisable(true);
         setupSliderTooltip();
     }
 
@@ -364,7 +364,7 @@ public final class KaraokeFxmlController implements Initializable {
                 true);
         if (eventController.isFormCompleted()) {
             disableMenuItemButtons(true);
-            anchorPaneQueueButtons.setDisable(false);
+            hBoxQueueButtons.setDisable(false);
             this.eventName = eventController.getEventName();
             this.eventManager = eventController.getEventManager();
         }
@@ -381,7 +381,7 @@ public final class KaraokeFxmlController implements Initializable {
                 true);
         if (eventController.isFormCompleted()) {
             disableMenuItemButtons(true);
-            anchorPaneQueueButtons.setDisable(false);
+            hBoxQueueButtons.setDisable(false);
             this.eventManager = eventController.getEventManager();
             Event event = eventManager.readEvent();
             this.eventName = event.name();
@@ -404,7 +404,7 @@ public final class KaraokeFxmlController implements Initializable {
         updateSingerIndex();
         this.eventName = null;
         this.eventManager = null;
-        anchorPaneQueueButtons.setDisable(true);
+        hBoxQueueButtons.setDisable(true);
         actionEvent.consume();
     }
 
@@ -466,9 +466,8 @@ public final class KaraokeFxmlController implements Initializable {
     private void setMediaPlayer(boolean updateSingerIndex) {
         //Set up the media player
         this.mediaPlayer = new MediaPlayer(activeSinger.getMedia());
-        mediaPlayer.totalDurationProperty().addListener((_, _, newValue) -> {
-            labelTime.setText(formatDuration(newValue));
-        });
+        mediaPlayer.totalDurationProperty().addListener(
+                (_, _, newValue) -> labelTime.setText(formatDuration(newValue)));
         labelSong.setText(activeSinger.getSongFile());
         mediaPlayer.setAudioSpectrumNumBands(10);
         mediaViewFxmlController.updateMediaPlayerForMediaView(mediaPlayer);

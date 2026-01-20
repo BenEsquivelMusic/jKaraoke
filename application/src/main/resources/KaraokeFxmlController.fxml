@@ -41,15 +41,15 @@
                             text="Singer Queue" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                             AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <VBox spacing="1.0">
-                        <AnchorPane fx:id="anchorPaneQueueButtons" maxHeight="-Infinity" prefHeight="35.0"
-                                    prefWidth="257.0">
-                            <Button layoutX="1.0" mnemonicParsing="false" onAction="#handleAddSinger" text="+"/>
-                            <Button layoutX="30.0" mnemonicParsing="false" onAction="#handleDeleteSinger" text="--"/>
-                            <Button layoutX="60.0" mnemonicParsing="false" onAction="#handleMoveSingerBack"
+                        <HBox fx:id="hBoxQueueButtons" maxHeight="-Infinity" prefHeight="35.0"
+                              prefWidth="257.0" spacing="2.0">
+                            <Button mnemonicParsing="false" onAction="#handleAddSinger" text="+"/>
+                            <Button mnemonicParsing="false" onAction="#handleDeleteSinger" text="--"/>
+                            <Button mnemonicParsing="false" onAction="#handleMoveSingerBack"
                                     text="&lt;"/>
-                            <Button layoutX="89.0" mnemonicParsing="false" onAction="#handleMoveSingerForward"
+                            <Button mnemonicParsing="false" onAction="#handleMoveSingerForward"
                                     text="&gt;"/>
-                        </AnchorPane>
+                        </HBox>
                         <ScrollPane fitToHeight="true" fitToWidth="true" prefWidth="257.0"
                                     style="-fx-background-color: #2D2D30;">
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="880.0" prefWidth="255.0">
@@ -99,9 +99,9 @@
                                                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                                                       AnchorPane.topAnchor="0.0">
                                                 <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.0"
+                                                    <ColumnConstraints hgrow="SOMETIMES"
                                                                        minWidth="10.0" prefWidth="114.0"/>
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="547.0"
+                                                    <ColumnConstraints hgrow="SOMETIMES"
                                                                        minWidth="10.0" prefWidth="481.0"/>
                                                 </columnConstraints>
                                                 <rowConstraints>
@@ -313,46 +313,29 @@
                                             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                                             AnchorPane.topAnchor="0.0">
                                     <bottom>
-                                        <AnchorPane prefHeight="44.0" prefWidth="595.0">
+                                        <HBox prefHeight="44.0" prefWidth="595.0" spacing="10.0" alignment="CENTER">
                                             <BorderPane.margin>
                                                 <Insets left="10.0"/>
                                             </BorderPane.margin>
-                                            <AnchorPane prefHeight="49.0" prefWidth="107.0">
-                                                <Button fx:id="buttonChangeSong" disable="true" mnemonicParsing="false"
-                                                        onAction="#handleChangeSong" prefHeight="25.0" prefWidth="107.0"
-                                                        text="Change Song" AnchorPane.bottomAnchor="0.0"
-                                                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                        AnchorPane.topAnchor="0.0"/>
-                                            </AnchorPane>
-                                            <AnchorPane layoutX="117.0">
-                                                <Button fx:id="buttonChangeSinger" disable="true"
-                                                        mnemonicParsing="false" onAction="#handleChangeSinger"
-                                                        prefHeight="49.0" prefWidth="107.0" text="Change Singer"
-                                                        AnchorPane.bottomAnchor="-49.0" AnchorPane.leftAnchor="0.0"
-                                                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
-                                            </AnchorPane>
-                                            <AnchorPane layoutX="234.0">
-                                                <Button fx:id="buttonReQueueSinger" disable="true"
-                                                        mnemonicParsing="false" onAction="#handleReQueueSinger"
-                                                        prefHeight="49.0" prefWidth="107.0" text="Queue Singer"
-                                                        AnchorPane.bottomAnchor="-49.0" AnchorPane.leftAnchor="0.0"
-                                                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
-                                            </AnchorPane>
-                                            <AnchorPane layoutX="351.0">
-                                                <Button fx:id="buttonCompleteSinger" disable="true"
-                                                        mnemonicParsing="false" onAction="#handleCompleteSinger"
-                                                        prefHeight="49.0" prefWidth="107.0" text="Complete Singer"
-                                                        AnchorPane.bottomAnchor="-49.0" AnchorPane.leftAnchor="0.0"
-                                                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
-                                            </AnchorPane>
-                                            <AnchorPane layoutX="468.0">
-                                                <Button fx:id="buttonNextSinger" disable="true" mnemonicParsing="false"
-                                                        onAction="#handleNextSinger" prefHeight="49.0" prefWidth="107.0"
-                                                        text="Next Singer" AnchorPane.bottomAnchor="-49.0"
-                                                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                        AnchorPane.topAnchor="0.0"/>
-                                            </AnchorPane>
-                                        </AnchorPane>
+                                            <Button fx:id="buttonChangeSong" disable="true" mnemonicParsing="false"
+                                                    onAction="#handleChangeSong" prefHeight="25.0" prefWidth="107.0"
+                                                    text="Change Song" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                                            <Button fx:id="buttonChangeSinger" disable="true"
+                                                    mnemonicParsing="false" onAction="#handleChangeSinger"
+                                                    prefHeight="25.0" prefWidth="107.0" text="Change Singer"
+                                                    maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                                            <Button fx:id="buttonReQueueSinger" disable="true"
+                                                    mnemonicParsing="false" onAction="#handleReQueueSinger"
+                                                    prefHeight="25.0" prefWidth="107.0" text="Queue Singer"
+                                                    maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                                            <Button fx:id="buttonCompleteSinger" disable="true"
+                                                    mnemonicParsing="false" onAction="#handleCompleteSinger"
+                                                    prefHeight="25.0" prefWidth="107.0" text="Complete Singer"
+                                                    maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                                            <Button fx:id="buttonNextSinger" disable="true" mnemonicParsing="false"
+                                                    onAction="#handleNextSinger" prefHeight="25.0" prefWidth="107.0"
+                                                    text="Next Singer" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                                        </HBox>
                                     </bottom>
                                     <top>
                                         <Label fx:id="labelSingerName" BorderPane.alignment="CENTER">
