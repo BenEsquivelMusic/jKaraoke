@@ -5,8 +5,11 @@ import karaoke.util.Lock;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 public final class EventManager {
+
+    private static final Logger logger = Logger.getLogger(EventManager.class.getName());
 
     private final ReentrantLock lock;
 
@@ -27,6 +30,7 @@ public final class EventManager {
         } catch (IOException | InterruptedException e) {
             throw new IllegalArgumentException(e);
         }
+        logger.info("Event saved");
     }
 
     public Event readEvent() {

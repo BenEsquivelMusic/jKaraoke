@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" spacing="15" stylesheets="@style.css"
+<VBox fx:id="vBoxPane" xmlns:fx="http://javafx.com/fxml/1" spacing="15" stylesheets="@style.css"
       xmlns="http://javafx.com/javafx/23.0.1" fx:controller="karaoke.controller.SettingsFxmlController">
     <padding>
         <Insets bottom="20" left="20" right="20" top="20"/>
