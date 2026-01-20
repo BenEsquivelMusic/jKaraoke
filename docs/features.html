@@ -66,6 +66,48 @@
         </ul>
     </div>
 
+    <div class="feature-block">
+        <h3>4. Supported Media Types</h3>
+        <p>jKaraoke uses the JavaFX Media Player to handle audio and video playback. Understanding which formats are supported can help you prepare your media library correctly.</p>
+        
+        <h4>JavaFX Media Player Supported Formats</h4>
+        <p>Based on the <a href="https://openjfx.io/javadoc/25/javafx.media/javafx/scene/media/package-summary.html">JavaFX 25 Media Package documentation</a>, the following formats are supported:</p>
+        
+        <p><strong>Audio Formats:</strong></p>
+        <ul>
+            <li><strong>MP3</strong> (.mp3) - MPEG-1, 2, and 2.5 audio streams</li>
+            <li><strong>WAV</strong> (.wav) - Waveform Audio File Format with uncompressed PCM audio</li>
+            <li><strong>AIFF</strong> (.aif, .aiff) - Audio Interchange File Format with uncompressed PCM audio</li>
+            <li><strong>AAC in MP4</strong> (.m4a, .mp4) - MPEG-4 container with Advanced Audio Coding</li>
+        </ul>
+        
+        <p><strong>Video Formats:</strong></p>
+        <ul>
+            <li><strong>MP4</strong> (.mp4, .m4v) - MPEG-4 Part 14 container with H.264/AVC or H.265/HEVC video and AAC audio</li>
+        </ul>
+        
+        <p><strong>Streaming:</strong></p>
+        <ul>
+            <li><strong>HLS</strong> (.m3u8) - HTTP Live Streaming with MP4 fragments</li>
+        </ul>
+        
+        <h4>CDG+MP3 Karaoke Files</h4>
+        <p>The standard format for karaoke files requires two separate files working together:</p>
+        <ul>
+            <li><strong>CDG (CD+Graphics) files</strong> contain the synchronized lyrics/graphics data</li>
+            <li><strong>CDG files must be paired</strong> with a corresponding MP3 audio file with the same base filename (e.g., <code>song.cdg</code> + <code>song.mp3</code>)</li>
+            <li><strong>Automatic synchronization:</strong> jKaraoke handles the synchronization between the CDG graphics and MP3 audio playback automatically</li>
+            <li><strong>Standard format:</strong> This is the standard format for karaoke files and provides on-screen lyrics display</li>
+        </ul>
+        
+        <h4>Important Notes</h4>
+        <ul>
+            <li><strong>Platform-native codecs:</strong> JavaFX uses platform-native codecs, so support may vary slightly across Windows, macOS, and Linux</li>
+            <li><strong>Best compatibility:</strong> For best compatibility, MP4 (H.264/AAC) and MP3 formats are recommended</li>
+            <li><strong>Supported protocols:</strong> File, HTTP(S), and JAR (for bundled media resources)</li>
+        </ul>
+    </div>
+
 </div>
 
 <div class="footer">
