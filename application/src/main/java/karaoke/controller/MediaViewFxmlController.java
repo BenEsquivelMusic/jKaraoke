@@ -8,6 +8,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import karaoke.media.*;
+import karaoke.util.StageUtil;
 
 import java.io.Closeable;
 import java.io.File;
@@ -71,8 +72,7 @@ public final class MediaViewFxmlController implements Initializable, Closeable {
     }
 
     public void showMediaView() {
-        Stage stage = (Stage) mediaViewPane.getScene().getWindow();
-        stage.show();
+        StageUtil.getStage(mediaViewPane).show();
     }
 
     public void stopMediaView() {
