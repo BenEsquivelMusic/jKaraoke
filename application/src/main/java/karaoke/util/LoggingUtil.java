@@ -4,6 +4,8 @@ import java.util.logging.Logger;
 
 public final class LoggingUtil {
 
+    private static final String ANSI_ESCAPE_PATTERN = "\u001B\\[[;\\d]*m";
+
     private LoggingUtil() {
         /* Utility class */
     }
@@ -31,7 +33,7 @@ public final class LoggingUtil {
             return "";
         }
         // Remove ANSI escape sequences
-        String sanitized = input.replaceAll("\u001B\\[[;\\d]*m", "");
+        String sanitized = input.replaceAll(ANSI_ESCAPE_PATTERN, "");
         // Replace control characters with safe alternatives
         sanitized = sanitized.replace('\n', '_')
                              .replace('\r', '_')
