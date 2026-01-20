@@ -41,7 +41,7 @@
                             text="Singer Queue" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                             AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <VBox spacing="1.0">
-                        <HBox fx:id="anchorPaneQueueButtons" maxHeight="-Infinity" prefHeight="35.0"
+                        <HBox fx:id="hBoxQueueButtons" maxHeight="-Infinity" prefHeight="35.0"
                               prefWidth="257.0" spacing="2.0">
                             <Button mnemonicParsing="false" onAction="#handleAddSinger" text="+"/>
                             <Button mnemonicParsing="false" onAction="#handleDeleteSinger" text="--"/>
