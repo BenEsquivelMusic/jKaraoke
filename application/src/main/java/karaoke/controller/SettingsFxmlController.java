@@ -8,6 +8,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import karaoke.util.StageUtil;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -43,8 +44,7 @@ public final class SettingsFxmlController implements Initializable {
     }
 
     public void show() {
-        Stage stage = (Stage) vBoxPane.getScene().getWindow();
-        stage.showAndWait();
+        StageUtil.getStage(vBoxPane).showAndWait();
     }
 
     @FXML
@@ -60,8 +60,7 @@ public final class SettingsFxmlController implements Initializable {
     }
 
     private void closeWindow() {
-        Stage stage = (Stage) buttonApply.getScene().getWindow();
-        stage.close();
+        StageUtil.getStage(buttonApply).close();
     }
 
     private void updateToggleButtonText() {

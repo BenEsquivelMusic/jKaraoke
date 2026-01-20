@@ -1,6 +1,7 @@
 package karaoke.event;
 
 import karaoke.util.Lock;
+import karaoke.util.LoggingUtil;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -9,7 +10,7 @@ import java.util.logging.Logger;
 
 public final class EventManager {
 
-    private static final Logger logger = Logger.getLogger(EventManager.class.getName());
+    private static final Logger logger = LoggingUtil.getLogger(EventManager.class);
 
     private final ReentrantLock lock;
 

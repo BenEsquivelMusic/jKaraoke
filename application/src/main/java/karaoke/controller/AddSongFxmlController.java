@@ -13,6 +13,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import karaoke.singer.IndexedSinger;
 
+import karaoke.util.AlertUtil;
+import karaoke.util.FileChooserUtil;
+import karaoke.util.LoggingUtil;
+import karaoke.util.StageUtil;
+
 import java.io.File;
 import java.net.URL;
 import java.util.Objects;
@@ -22,7 +27,7 @@ import java.util.logging.Logger;
 
 public final class AddSongFxmlController implements Initializable {
 
-    private static final Logger logger = Logger.getLogger(AddSongFxmlController.class.getName());
+    private static final Logger logger = LoggingUtil.getLogger(AddSongFxmlController.class);
 
     @FXML
     private Button buttonBrowseFile;
@@ -42,12 +47,7 @@ public final class AddSongFxmlController implements Initializable {
         /* FXML controller class */
     }
 
-    private static String sanitizeForLogging(String input) {
-        if (input == null) {
-            return "";
-        }
-        return input.replace('\n', '_').replace('\r', '_').replace('\t', ' ');
-    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -63,9 +63,7 @@ public final class AddSongFxmlController implements Initializable {
     }
 
     public void handleBrowseSong(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose song file");
-        File selectedFile = fileChooser.showOpenDialog(getStage());
+        File selectedFile = FileChooserUtil.showFileChooser("Choose song file", StageUtil.getStage(addSongAnchorPane));
         if (Objects.nonNull(selectedFile)) {
             txtSong.setText(getAbsolutePath(selectedFile));
         }
@@ -88,35 +86,28 @@ public final class AddSongFxmlController implements Initializable {
     }
 
     public void handleCancelAction(ActionEvent actionEvent) {
-        getStage().close();
+        StageUtil.getStage(addSongAnchorPane).close();
         actionEvent.consume();
     }
 
     public void handleOkAction(ActionEvent actionEvent) {
         if (txtSingerName.getText().isBlank()) {
             logger.warning(() -> "Singer name cannot be blank");
-            handleAlert("Singer name cannot be blank");
+            AlertUtil.showWarning("Singer name cannot be blank");
         } else if (txtSong.getText().isBlank()) {
             logger.warning(() -> "Song name cannot be blank");
-            handleAlert("Song name cannot be blank");
+            AlertUtil.showWarning("Song name cannot be blank");
         } else if (!setIndexedSinger()) {
-            logger.warning(() -> "Invalid Media format: " + sanitizeForLogging(txtSong.getText()));
-            handleAlert("Invalid Media format: " + txtSong.getText());
+            logger.warning(() -> "Invalid Media format: " + LoggingUtil.sanitizeForLogging(txtSong.getText()));
+            AlertUtil.showWarning("Invalid Media format: " + txtSong.getText());
         } else {
-            logger.info(() -> "Song added successfully: " + sanitizeForLogging(txtSong.getText()));
-            getStage().close();
+            logger.info(() -> "Song added successfully: " + LoggingUtil.sanitizeForLogging(txtSong.getText()));
+            StageUtil.getStage(addSongAnchorPane).close();
         }
         actionEvent.consume();
     }
 
-    private Stage getStage() {
-        return (Stage) addSongAnchorPane.getScene().getWindow();
-    }
 
-    private void handleAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
-        alert.showAndWait();
-    }
 
     private boolean setIndexedSinger() {
         try {
