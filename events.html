@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jKaraoke User Guide - Events</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+        header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; }
+        nav { background-color: #34495e; padding: 10px; text-align: center; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; }
+        nav a:hover { text-decoration: underline; }
+        .content { padding: 20px; }
+        h1, h2, h3 { color: #2c3e50; }
+        .alert-box { border: 1px solid #f39c12; background-color: #fef9e7; padding: 10px; border-radius: 5px; color: #d35400; font-size: 0.9em; margin-bottom: 20px; }
+        .footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: #777; border-top: 1px solid #ccc; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>jKaraoke User Guide</h1>
+    <p>Event Management</p>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="interface.html">Interface</a>
+    <a href="management.html">Queue Management</a>
+    <a href="events.html">Events</a>
+    <a href="features.html">Features & Settings</a>
+</nav>
+
+<div class="content">
+    <h2>Working with Events</h2>
+    <p>jKaraoke uses the concept of "Events" to manage sessions. An Event allows you to save your current singer queue and application state to a file, which can be reloaded later.</p>
+
+    <h3>Creating a New Event</h3>
+    <p>When you start a new karaoke session, it is best practice to create a new event immediately.</p>
+    <ol>
+        <li>Go to <strong>File > New Event</strong>.</li>
+        <li>Enter a unique name for your event (e.g., "BirthdayParty_Jan2026").</li>
+        <li>Select a folder where the event file will be saved.</li>
+        <li>Click <strong>OK</strong>.</li>
+    </ol>
+    <p>This creates a <code>.kev</code> file that will store your session data.</p>
+
+    <h3>Saving an Event</h3>
+    <p>While jKaraoke may have auto-save features (configurable in Settings), you can manually save your progress at any time.</p>
+    <ul>
+        <li>Go to <strong>File > Save Event</strong> to write the current queue and active singer status to your event file.</li>
+    </ul>
+
+    <h3>Loading an Existing Event</h3>
+    <p>To resume a previous session:</p>
+    <ol>
+        <li>Go to <strong>File > Open Event</strong>.</li>
+        <li>Navigate to the location of your saved <code>.kev</code> file.</li>
+        <li>Select the file and click <strong>Open</strong>.</li>
+    </ol>
+    <p>The application will restore the queue exactly as it was when you last saved.</p>
+
+    <div class="alert-box">
+        <strong>Note:</strong> Loading an event relies on the media files (songs) remaining in the same location on your computer. if you move or rename your MP3/CDG files, jKaraoke may not be able to play them when the event is reloaded.
+    </div>
+
+</div>
+
+<div class="footer">
+    <p>jKaraoke User Guide</p>
+</div>
+
+</body>
+</html>
