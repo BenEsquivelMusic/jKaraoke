@@ -7,8 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import karaoke.eq.EqualizerSettings;
 import karaoke.util.AlertUtil;
 import karaoke.util.FileChooserUtil;

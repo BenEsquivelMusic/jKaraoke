@@ -3,14 +3,9 @@ package karaoke.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import karaoke.event.EventManager;
 import karaoke.util.AlertUtil;
 import karaoke.util.FileChooserUtil;
@@ -43,7 +38,6 @@ public final class EventFxmlController implements Initializable {
     private EventManager eventManager;
 
     public EventFxmlController() {
-        /* FXML controller class */
     }
 
 

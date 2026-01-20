@@ -3,14 +3,10 @@ package karaoke.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.MediaException;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import karaoke.singer.IndexedSinger;
 
 import karaoke.util.AlertUtil;
@@ -44,7 +40,6 @@ public final class AddSongFxmlController implements Initializable {
     private IndexedSinger singer;
 
     public AddSongFxmlController() {
-        /* FXML controller class */
     }
 
 
