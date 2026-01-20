@@ -7,6 +7,7 @@ Java FX Desktop application for playing karaoke media.
 ## Features
 - Karaoke media player
 - Singer Queue management
+- MP3+CDG compatible 
 - Equalizer with presets
 - Settings for customization
 
