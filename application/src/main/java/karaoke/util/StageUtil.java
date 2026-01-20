@@ -22,7 +22,9 @@ public final class StageUtil {
     public static Stage getStage(Node node) {
         Objects.requireNonNull(node, "Node cannot be null");
         Objects.requireNonNull(node.getScene(), "Node's scene cannot be null");
-        return (Stage) node.getScene().getWindow();
+        var window = node.getScene().getWindow();
+        Objects.requireNonNull(window, "Node's window cannot be null");
+        return (Stage) window;
     }
 
 }

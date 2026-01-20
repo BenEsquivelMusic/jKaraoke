@@ -19,8 +19,9 @@ public final class LoggingUtil {
     }
 
     /**
-     * Sanitizes a string for logging by replacing newlines, carriage returns, and tabs
-     * with safe characters to prevent log injection attacks.
+     * Sanitizes a string for logging by replacing newlines, carriage returns, tabs,
+     * and other control characters with safe characters to prevent log injection attacks.
+     * Also removes ANSI escape sequences.
      *
      * @param input the input string to sanitize
      * @return sanitized string safe for logging, or empty string if input is null
@@ -29,7 +30,16 @@ public final class LoggingUtil {
         if (input == null) {
             return "";
         }
-        return input.replace('\n', '_').replace('\r', '_').replace('\t', ' ');
+        // Remove ANSI escape sequences
+        String sanitized = input.replaceAll("\u001B\\[[;\\d]*m", "");
+        // Replace control characters with safe alternatives
+        sanitized = sanitized.replace('\n', '_')
+                             .replace('\r', '_')
+                             .replace('\t', ' ')
+                             .replace('\f', ' ')
+                             .replace('\u000B', ' '); // vertical tab
+        // Remove any remaining control characters
+        return sanitized.replaceAll("\\p{Cntrl}", "");
     }
 
 }
