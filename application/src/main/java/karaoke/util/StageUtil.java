@@ -3,6 +3,8 @@ package karaoke.util;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public final class StageUtil {
 
     private StageUtil() {
@@ -14,8 +16,12 @@ public final class StageUtil {
      *
      * @param node the node to get the stage from
      * @return the stage containing the node
+     * @throws NullPointerException if node, its scene, or window is null
+     * @throws ClassCastException if the window is not a Stage
      */
     public static Stage getStage(Node node) {
+        Objects.requireNonNull(node, "Node cannot be null");
+        Objects.requireNonNull(node.getScene(), "Node's scene cannot be null");
         return (Stage) node.getScene().getWindow();
     }
 

@@ -15,7 +15,10 @@ public final class AlertUtil {
      * @param message the message to display
      */
     public static void showWarning(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setContentText(message);
+        alert.getButtonTypes().setAll(ButtonType.OK);
         alert.showAndWait();
     }
 
