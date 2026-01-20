@@ -9,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import karaoke.singer.IndexedSinger;
+import karaoke.util.StageUtil;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,8 +36,7 @@ public final class SingerLineupFxmlController implements Initializable {
     }
 
     public void showSingerLineup() {
-        Stage stage = (Stage) singerViewPane.getScene().getWindow();
-        stage.show();
+        StageUtil.getStage(singerViewPane).show();
     }
 
 }

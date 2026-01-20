@@ -10,6 +10,9 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import karaoke.eq.EqualizerSettings;
+import karaoke.util.AlertUtil;
+import karaoke.util.FileChooserUtil;
+import karaoke.util.StageUtil;
 
 import java.io.*;
 import java.net.URL;
@@ -183,7 +186,7 @@ public final class EqualizerFxmlController implements Initializable {
     public void handleSaveCustomPreset() {
         String name = customPresetName.getText();
         if (name == null || name.isBlank()) {
-            showAlert("Please enter a name for your custom preset.");
+            AlertUtil.showWarning("Please enter a name for your custom preset.");
             return;
         }
         double[] values = new double[EqualizerSettings.BAND_COUNT];
@@ -204,15 +207,13 @@ public final class EqualizerFxmlController implements Initializable {
     }
 
     private void saveEqualizerSettingsToFile(EqualizerSettings settings) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Equalizer Settings");
-        fileChooser.setInitialFileName(settings.getName() + EQS_EXTENSION);
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Equalizer Settings Files", "*" + EQS_EXTENSION)
+        File file = FileChooserUtil.showFileSaveDialog(
+                "Save Equalizer Settings",
+                StageUtil.getStage(equalizerPane),
+                settings.getName() + EQS_EXTENSION,
+                "Equalizer Settings Files",
+                "*" + EQS_EXTENSION
         );
-
-        Stage stage = (Stage) equalizerPane.getScene().getWindow();
-        File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {
             String filePath = file.getAbsolutePath();
@@ -225,23 +226,21 @@ public final class EqualizerFxmlController implements Initializable {
                         settings.getName(), settings.getBandValues()
                 );
                 oos.writeObject(serializableSettings);
-                showInfo("Equalizer settings saved successfully to: " + file.getName());
+                AlertUtil.showInfo("Equalizer settings saved successfully to: " + file.getName());
             } catch (IOException e) {
-                showAlert("Failed to save equalizer settings: " + e.getMessage());
+                AlertUtil.showWarning("Failed to save equalizer settings: " + e.getMessage());
             }
         }
     }
 
     @FXML
     public void handleLoadSettings() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Load Equalizer Settings");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Equalizer Settings Files", "*" + EQS_EXTENSION)
+        File file = FileChooserUtil.showFileChooserWithFilter(
+                "Load Equalizer Settings",
+                StageUtil.getStage(equalizerPane),
+                "Equalizer Settings Files",
+                "*" + EQS_EXTENSION
         );
-
-        Stage stage = (Stage) equalizerPane.getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
@@ -265,9 +264,9 @@ public final class EqualizerFxmlController implements Initializable {
                 // Select and apply the loaded preset
                 presetComboBox.getSelectionModel().select(settings);
                 applyPreset(settings);
-                showInfo("Equalizer settings loaded successfully: " + settings.getName());
+                AlertUtil.showInfo("Equalizer settings loaded successfully: " + settings.getName());
             } catch (IOException | ClassNotFoundException e) {
-                showAlert("Failed to load equalizer settings: " + e.getMessage());
+                AlertUtil.showWarning("Failed to load equalizer settings: " + e.getMessage());
             }
         }
     }
@@ -291,23 +290,10 @@ public final class EqualizerFxmlController implements Initializable {
     }
 
     public void showEqualizer() {
-        Stage stage = (Stage) equalizerPane.getScene().getWindow();
-        stage.show();
+        StageUtil.getStage(equalizerPane).show();
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Warning");
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
-    private void showInfo(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information");
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
     private static class SerializableEqualizerSettings implements Serializable {
         private static final long serialVersionUID = 1L;

@@ -12,6 +12,10 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import karaoke.event.EventManager;
+import karaoke.util.AlertUtil;
+import karaoke.util.FileChooserUtil;
+import karaoke.util.LoggingUtil;
+import karaoke.util.StageUtil;
 
 import java.io.File;
 import java.net.URL;
@@ -21,7 +25,7 @@ import java.util.logging.Logger;
 
 public final class EventFxmlController implements Initializable {
 
-    private static final Logger logger = Logger.getLogger(EventFxmlController.class.getName());
+    private static final Logger logger = LoggingUtil.getLogger(EventFxmlController.class);
 
     @FXML
     private Label labelSaveFile;
@@ -42,12 +46,7 @@ public final class EventFxmlController implements Initializable {
         /* FXML controller class */
     }
 
-    private static String sanitizeForLogging(String input) {
-        if (input == null) {
-            return "";
-        }
-        return input.replace('\n', '_').replace('\r', '_').replace('\t', ' ');
-    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -73,20 +72,16 @@ public final class EventFxmlController implements Initializable {
     @FXML
     public void handleBrowseEventFile(ActionEvent actionEvent) {
         if (isCreateEvent) {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.setTitle("Browse to save data location");
-            File selectedFolder = directoryChooser.showDialog(getStage());
+            File selectedFolder = FileChooserUtil.showDirectoryChooser("Browse to save data location", StageUtil.getStage(addSongAnchorPane));
             if (Objects.nonNull(selectedFolder)) {
                 txtEventFile.setText(selectedFolder.getAbsolutePath());
-                logger.info(() -> "Selected folder: " + sanitizeForLogging(selectedFolder.getAbsolutePath()));
+                logger.info(() -> "Selected folder: " + LoggingUtil.sanitizeForLogging(selectedFolder.getAbsolutePath()));
             }
         } else {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Choose .kev file");
-            File selectedFile = fileChooser.showOpenDialog(getStage());
+            File selectedFile = FileChooserUtil.showFileChooser("Choose .kev file", StageUtil.getStage(addSongAnchorPane));
             if (Objects.nonNull(selectedFile)) {
                 txtEventFile.setText(selectedFile.getAbsolutePath());
-                logger.info(() -> "Selected file: " + sanitizeForLogging(selectedFile.getAbsolutePath()));
+                logger.info(() -> "Selected file: " + LoggingUtil.sanitizeForLogging(selectedFile.getAbsolutePath()));
             }
         }
 
@@ -99,33 +94,26 @@ public final class EventFxmlController implements Initializable {
     }
 
     public void handleCancelAction(ActionEvent actionEvent) {
-        getStage().close();
+        StageUtil.getStage(addSongAnchorPane).close();
         actionEvent.consume();
     }
 
     public void handleOkAction(ActionEvent actionEvent) {
         if (!txtEventName.isDisabled() && txtEventName.getText().isBlank()) {
             logger.warning(() -> "Event name cannot be blank");
-            handleAlert("Event name cannot be blank");
+            AlertUtil.showWarning("Event name cannot be blank");
         } else if (txtEventFile.getText().isBlank()) {
             logger.warning(() -> "Event file cannot be blank");
-            handleAlert("Event file cannot be blank");
+            AlertUtil.showWarning("Event file cannot be blank");
         } else {
             setEventManager();
-            logger.info(() -> "Event manager configured for: " + sanitizeForLogging(txtEventName.getText()));
-            getStage().close();
+            logger.info(() -> "Event manager configured for: " + LoggingUtil.sanitizeForLogging(txtEventName.getText()));
+            StageUtil.getStage(addSongAnchorPane).close();
         }
         actionEvent.consume();
     }
 
-    private Stage getStage() {
-        return (Stage) addSongAnchorPane.getScene().getWindow();
-    }
 
-    private void handleAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
-        alert.showAndWait();
-    }
 
     private void setEventManager() {
         File eventFile = new File(txtEventFile.getText());
