@@ -21,7 +21,6 @@ public final class Main extends Application {
     private static final Logger logger = LoggingUtil.getLogger(Main.class);
 
     public Main() {
-        /* Main application class  */
     }
 
     static void main(String[] args) {

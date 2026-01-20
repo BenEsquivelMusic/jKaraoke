@@ -6,7 +6,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.stage.Stage;
 import karaoke.media.*;
 import karaoke.util.StageUtil;
 
