@@ -2,7 +2,7 @@
 
 Java FX Desktop application for playing karaoke media.
 
-![jKaraoke Main Application Interface](docs/images/MainApplication.png)
+![jKaraoke Main Application Interface](docs/images/MainApplication_Playing.png)
 
 ## Features
 - Karaoke media player
