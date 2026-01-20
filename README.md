@@ -8,6 +8,10 @@ Java FX Desktop application for playing karaoke media.
 - Equalizer with presets
 - Settings for customization
 
+## Application Preview
+
+![jKaraoke Main Application Interface](docs/images/MainApplication.png)
+
 ## Build Instructions
 
 To build the application, ensure you have **Java 25** and **Maven** installed.
