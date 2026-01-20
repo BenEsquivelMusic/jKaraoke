@@ -30,4 +30,4 @@ You can also import the project into IntelliJ IDEA, Eclipse, or VS Code as a Mav
 
 ## Contributing
 
-Contributions are welcome. Please open issues or pull requests on the repository for bug reports or enhancements.
+Contributions are welcome. Please open issues or pull requests on the repository for bug reports or enhancements (see CODE_OF_CONDUCT.md).
