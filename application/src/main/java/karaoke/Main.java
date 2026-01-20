@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import karaoke.controller.KaraokeFxmlController;
 import karaoke.util.ApplicationIcons;
+import karaoke.util.LoggingUtil;
 
 import java.net.URL;
 import java.util.Objects;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 
 public final class Main extends Application {
 
-    private static final Logger logger = Logger.getLogger(Main.class.getName());
+    private static final Logger logger = LoggingUtil.getLogger(Main.class);
 
     public Main() {
         /* Main application class  */
