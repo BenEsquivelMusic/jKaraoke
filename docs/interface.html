@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jKaraoke User Guide - Interface</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+        header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; }
+        nav { background-color: #34495e; padding: 10px; text-align: center; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; }
+        nav a:hover { text-decoration: underline; }
+        .content { padding: 20px; }
+        h1, h2 { color: #2c3e50; }
+        .component-box { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 5px; background-color: #f9f9f9; }
+        .component-title { font-weight: bold; font-size: 1.1em; margin-bottom: 5px; color: #e67e22; }
+        .footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: #777; border-top: 1px solid #ccc; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>jKaraoke User Guide</h1>
+    <p>Interface Overview</p>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="interface.html">Interface</a>
+    <a href="management.html">Queue Management</a>
+    <a href="events.html">Events</a>
+    <a href="features.html">Features & Settings</a>
+</nav>
+
+<div class="content">
+    <h2>Main Interface Overview</h2>
+    <p>The jKaraoke interface is designed to be intuitive, placing all critical controls at your fingertips. Below is a breakdown of the main screen components.</p>
+
+    <div class="component-box">
+        <div class="component-title">1. Menu Bar</div>
+        <p>Located at the top of the window, the menu bar provides access to global application functions:</p>
+        <ul>
+            <li><strong>File:</strong> Create new events, open existing event files (.kev), save your current session, or close the application.</li>
+        </ul>
+    </div>
+
+    <div class="component-box">
+        <div class="component-title">2. Information Dashboard</div>
+        <p>This section displays real-time status information:</p>
+        <ul>
+            <li><strong>Current Singer:</strong> Displays the name of the person currently performing.</li>
+            <li><strong>Song Information:</strong> Shows the Title, Artist, and Album Artist (if available) of the playing track.</li>
+            <li><strong>Queue Status:</strong> Indicates the number of singers waiting in the queue.</li>
+            <li><strong>Time:</strong> Shows current playback time and remaining time.</li>
+        </ul>
+    </div>
+
+    <div class="component-box">
+        <div class="component-title">3. Playback Controls</div>
+        <p>Standard media controls to manage the song:</p>
+        <ul>
+            <li><strong>Play:</strong> Starts or resumes the song.</li>
+            <li><strong>Pause:</strong> Temporarily halts playback.</li>
+            <li><strong>Stop:</strong> Completely stops the song and resets the position.</li>
+            <li><strong>Track Slider:</strong> Scrub through the song to jump to a specific time.</li>
+            <li><strong>Volume Slider:</strong> Adjust the master output volume.</li>
+        </ul>
+    </div>
+
+    <div class="component-box">
+        <div class="component-title">4. Queue Management Panel</div>
+        <p>A set of buttons dedicated to managing the flow of the karaoke night:</p>
+        <ul>
+            <li><strong>Next Singer:</strong> Advances the queue to the next person.</li>
+            <li><strong>Complete Singer:</strong> Marks the current singer's turn as done and removes them from the active slot.</li>
+            <li><strong>Re-Queue Singer:</strong> Moves the current singer to the back of the line for another turn.</li>
+            <li><strong>Change Song:</strong> Allows you to swap the song file for the current singer.</li>
+            <li><strong>Change Singer:</strong> Allows you to edit the current singer's name.</li>
+        </ul>
+    </div>
+
+    <div class="component-box">
+        <div class="component-title">5. Singer Queue Table</div>
+        <p>The central list showing upcoming performances. It displays the singer's name and their chosen song.</p>
+    </div>
+
+    <div class="component-box">
+        <div class="component-title">6. Audio Spectrum</div>
+        <p>A visual bar chart that reacts to the audio frequencies in real-time, providing visual feedback of the music playback.</p>
+    </div>
+
+</div>
+
+<div class="footer">
+    <p>jKaraoke User Guide</p>
+</div>
+
+</body>
+</html>
