@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-latest
+            platform: windows
+          - os: macos-latest
+            platform: macos
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      - name: Build and create runtime image
+        working-directory: application
+        run: mvn -B clean test javafx:jlink
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jkaraoke-${{ matrix.platform }}
+          path: application/target/jkaraoke.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Rename platform artifacts
+        run: |
+          mv jkaraoke-linux/jkaraoke.zip jkaraoke-linux.zip
+          mv jkaraoke-windows/jkaraoke.zip jkaraoke-windows.zip
+          mv jkaraoke-macos/jkaraoke.zip jkaraoke-macos.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            jkaraoke-linux.zip
+            jkaraoke-windows.zip
+            jkaraoke-macos.zip
+          generate_release_notes: true
